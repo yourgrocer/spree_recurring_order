@@ -2,8 +2,15 @@ require 'spec_helper'
 
 describe Spree::RecurringOrder do
 
-  it 'should be able to create a recurring order' do
-    Spree::RecurringOrder.create.should be_true
+  describe 'create from order' do
+
+    it 'should create from original order' do
+      order = FactoryGirl.create(:order)
+
+      recurring_order = Spree::RecurringOrder.create_from_order(order)
+      recurring_order.id.should_not be_nil
+    end
+
   end
 
 end
