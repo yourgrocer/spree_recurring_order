@@ -1,10 +1,8 @@
 module Spree
   class RecurringOrdersController < Spree::StoreController
 
-    before_filter :check_authorization
- 
     def create
-      original_order = Spree::Order.find(params[:original_order_id])
+      original_order = Spree::Order.find(recurring_order_params[:original_order_id])
       @recurring_order = Spree::RecurringOrder.new
       @recurring_order.original_order = original_order
 
@@ -17,6 +15,12 @@ module Spree
 
     def show
       @recurring_order = Spree::RecurringOrder.find(params[:id])
+    end
+
+    private
+
+    def recurring_order_params
+      params[:recurring_order].permit(:original_order_id)
     end
 
   end

@@ -1,7 +1,7 @@
 module Spree
   class RecurringOrder < ActiveRecord::Base
 
-    has_one :original_order, class_name: 'Spree::Order'
+    belongs_to :original_order, class_name: 'Spree::Order'
 
     def self.create_from_order(order)
       recurring_order = RecurringOrder.new

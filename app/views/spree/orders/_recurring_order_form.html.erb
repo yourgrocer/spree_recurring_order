@@ -7,6 +7,7 @@
   <p>Sign up for a recurring order and we will get in touch so you don't have to worry about your groceries anymore.</p>
 
   <%= form_for @recurring_order do |f| %>
+    <%= f.hidden_field :original_order_id, value: @order.id %>
     <%= f.submit "Send me hassle-free groceries" %>
   <% end %>
 

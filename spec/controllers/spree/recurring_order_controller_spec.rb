@@ -11,6 +11,16 @@ describe Spree::RecurringOrdersController do
     controller.stub :check_authorization
   end
 
+  describe 'integration' do
+
+    it 'should create new recurring order (integration)' do
+      old_order = FactoryGirl.create(:order)
+      spree_post :create, recurring_order: {original_order_id: old_order.id}
+      Spree::RecurringOrder.last.original_order.should == old_order
+    end
+
+  end
+
   describe 'create' do
 
     before :each do
@@ -18,18 +28,19 @@ describe Spree::RecurringOrdersController do
       Spree::RecurringOrder.stub(:new).and_return(recurring_order)
     end
 
+
     it 'should create new recurring order' do
       recurring_order.should_receive(:original_order=).with(original_order)
       recurring_order.should_receive(:save).and_return(true)
 
-      spree_post :create, original_order_id: 1
+      spree_post :create, recurring_order: {original_order_id: 1}
       response.should redirect_to("/recurring_orders/666")
     end
 
     it 'should render order complete if recurring order cant be saved' do
       recurring_order.should_receive(:save).and_return(false)
 
-      spree_post :create, original_order_id: 1
+      spree_post :create, recurring_order: {original_order_id: 1}
       response.should render_template(:new) 
     end
 
