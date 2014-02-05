@@ -7,7 +7,7 @@ module Spree
       @recurring_order.original_order = original_order
 
       if @recurring_order.save
-        redirect_to("/recurring_orders/#{@recurring_order.id}")
+        redirect_to(spree.recurring_order_url(@recurring_order.id))
       else
         render :new
       end
