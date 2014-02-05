@@ -1,0 +1,8 @@
+fieldset#recurring_orders {
+  text-align: center;
+}
+
+fieldset#recurring_orders input[type='submit'] {
+  font-size: 24px;
+  text-align: center;
+}
