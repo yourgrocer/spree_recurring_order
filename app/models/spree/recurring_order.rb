@@ -15,7 +15,15 @@ module Spree
     end
 
     def original_order
-      orders.sort_by{|order| order.created_at}.first
+      @original_order ||= orders.sort_by{|order| order.created_at}.first
+    end
+
+    def email
+      original_order.email
+    end
+
+    def phone
+      original_order.ship_address.phone rescue ''
     end
 
     private

@@ -37,4 +37,24 @@ describe Spree::RecurringOrder do
 
   end
 
+  describe 'delegation' do
+
+    let(:ship_address){FactoryGirl.build(:address)}
+    let(:order){FactoryGirl.build(:order, ship_address: ship_address)}
+
+    before :each do
+      @recurring_order = Spree::RecurringOrder.new
+      @recurring_order.orders << order
+    end
+
+    it 'should delegate customer email to original order' do
+      @recurring_order.email.should == order.email
+    end
+
+    it 'should delegate customer phone to original order' do
+      @recurring_order.phone.should == order.ship_address.phone
+    end
+
+  end
+
 end
