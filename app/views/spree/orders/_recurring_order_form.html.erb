@@ -1,0 +1,9 @@
+<fieldset id='recurring_orders'>
+  <h2>Thanks for your order!</h2>
+  <h2>Would you like to make this process even easier next time?</h2>
+  <p>Sign up for a recurring order and we will help you to get your groceries without a hassle every week.</p>
+
+  <%= form_for @recurring_order do |f| %>
+    <%= f.submit "Create recurring order" %>
+  <% end %>
+</fieldset>
