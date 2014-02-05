@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Spree::RecurringOrdersController do
   
   let(:original_order){ FactoryGirl.build(:order) }
-  let(:recurring_order){ double(Spree::RecurringOrder, save: true, id: 666).as_null_object }
+  let(:orders){ [] }
+  let(:recurring_order){ double(Spree::RecurringOrder, save: true, id: 666, orders: orders).as_null_object }
   let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
   before :each do
@@ -30,7 +31,7 @@ describe Spree::RecurringOrdersController do
 
 
     it 'should create new recurring order' do
-      recurring_order.should_receive(:original_order=).with(original_order)
+      orders.should_receive(:<<).with(original_order)
       recurring_order.should_receive(:save).and_return(true)
 
       spree_post :create, recurring_order: {original_order_id: 1}
