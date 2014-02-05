@@ -1,14 +1,16 @@
-<fieldset id='recurring_orders'>
+<%- if @present_recurring %>
+  <fieldset id='recurring_orders'>
 
-  <h2>
-    <%= "Thanks #{@order.ship_address.firstname}!" %>
-  </h2>
-  <h2>Would you like to make this process even easier next time?</h2>
-  <p>Sign up for a recurring order and we will get in touch so you don't have to worry about your groceries anymore.</p>
+    <h2>
+      <%= "Thanks #{@order.ship_address.firstname}!" %>
+    </h2>
+    <h2>Would you like to make this process even easier next time?</h2>
+    <p>Sign up for a recurring order and we will get in touch so you don't have to worry about your groceries anymore.</p>
 
-  <%= form_for @recurring_order do |f| %>
-    <%= f.hidden_field :original_order_id, value: @order.id %>
-    <%= f.submit "Send me hassle-free groceries" %>
-  <% end %>
+    <%= form_for @recurring_order do |f| %>
+      <%= f.hidden_field :original_order_id, value: @order.id %>
+      <%= f.submit "Send me hassle-free groceries" %>
+    <% end %>
 
-</fieldset>
+  </fieldset>
+<% end %>

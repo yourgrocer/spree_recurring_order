@@ -29,6 +29,15 @@ describe Spree::OrdersController do
       assigns(:recurring_order).should == recurring_order
     end
 
+    it 'should assign @present_recurring' do
+      spree_get :show, {id: "G2134", order_completed: true}
+      assigns(:present_recurring).should == true 
+    end
+
+    it 'should not assign @present_recurring if not present' do
+      spree_get :show, {id: "G2134"}
+      assigns(:present_recurring).should == false
+    end
 
   end
 
