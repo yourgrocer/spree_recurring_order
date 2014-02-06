@@ -6,14 +6,16 @@
   <table class="index responsive" id="listing_orders" data-hook>
     <colgroup>
       <col style="width: 25%;">
-      <col style="width: 35%;">
-      <col style="width: 15%;">
       <col style="width: 25%;">
+      <col style="width: 15%;">
+      <col style="width: 15%;">
+      <col style="width: 20%;">
     </colgroup>
     <thead>
       <tr>
         <th><%= Spree.t(:original_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
         <th><%= Spree.t(:customer_email, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+        <th><%= Spree.t(:customer_phone, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
         <th><%= Spree.t(:active?, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
         <th><%= Spree.t(:created_at, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
       </tr>
@@ -22,7 +24,8 @@
       <% @recurring_orders.each do |order| %>
         <tr class="<%= cycle('odd', 'even') %>">
           <td class="align-center"><%= link_to order.original_order.number, edit_admin_order_path(order.original_order) %></td>
-          <td class="align-center"><%= mail_to order.original_order.email %></td>
+          <td class="align-center"><%= mail_to order.email %></td>
+          <td class="align-center"><%= mail_to order.phone %></td>
           <td class="align-center">YES</td>
           <td class="align-center"><%= l (order.created_at).to_date %></td>
         </tr>
