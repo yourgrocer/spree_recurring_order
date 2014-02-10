@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::RecurringOrdersController do
   
-  let(:original_order){ FactoryGirl.build(:order) }
+  let(:original_order){ FactoryGirl.build(:order, id: 1, number: 'G1234') }
   let(:orders){ [] }
   let(:recurring_order){ double(Spree::RecurringOrder, save: true, id: 666, orders: orders).as_null_object }
   let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
@@ -43,6 +43,12 @@ describe Spree::RecurringOrdersController do
 
       spree_post :create, recurring_order: {original_order_id: 1}
       response.should render_template(:new) 
+    end
+
+    it 'should render order complete if recurring order already exists' do
+      original_order.stub(:recurring_order).and_return(recurring_order)
+      spree_post :create, recurring_order: {original_order_id: 1}
+      response.should redirect_to("/orders/G1234")
     end
 
   end
