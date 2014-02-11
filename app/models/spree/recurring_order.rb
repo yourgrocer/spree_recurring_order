@@ -7,6 +7,8 @@ module Spree
 
     belongs_to :original_order, class_name: 'Spree::Order'
 
+    after_create :generate_order_number
+
     def self.create_from_order(order)
       recurring_order = RecurringOrder.new
       recurring_order.orders << order
@@ -30,6 +32,16 @@ module Spree
 
     def at_least_one_order
       self.errors[:orders] << "cannot be empty" if orders.empty?
+    end
+
+    def generate_order_number
+      record = true
+      while record
+        random = "R#{Array.new(6){rand(6)}.join}"
+        record = self.class.where(number: random).first
+      end
+      self.number = random if self.number.blank?
+      self.number
     end
 
   end

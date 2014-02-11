@@ -21,4 +21,8 @@ describe Spree::Admin::RecurringOrdersController do
 
   end
 
+  describe 'show' do
+
+  end
+
 end

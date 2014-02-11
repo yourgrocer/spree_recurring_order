@@ -18,7 +18,22 @@ describe Spree::RecurringOrder do
       recurring_order.original_order.should == order
     end
 
+    it "should assign number that starts with R" do
+      order = FactoryGirl.create(:order)
+
+      recurring_order = Spree::RecurringOrder.create_from_order(order)
+      recurring_order.number.should =~ /^R/
+    end
+
+    it "should assign number that has 6 numbers" do
+      order = FactoryGirl.create(:order)
+
+      recurring_order = Spree::RecurringOrder.create_from_order(order)
+      recurring_order.number.should =~ /\d{6}$/
+    end
+
   end
+
 
   describe 'validation' do
 
