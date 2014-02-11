@@ -29,14 +29,16 @@ describe Spree::OrdersController do
       assigns(:recurring_order).should == recurring_order
     end
 
-    it 'should assign @present_recurring' do
+    it 'should render show_recurring if order completed is true' do
       spree_get :show, {id: "G2134", order_completed: true}
       assigns(:present_recurring).should == true 
+      response.should render_template('show_recurring')
     end
 
-    it 'should not assign @present_recurring if not present' do
+    it 'should render show normally' do
       spree_get :show, {id: "G2134"}
       assigns(:present_recurring).should == false
+      response.should render_template('show')
     end
 
   end
