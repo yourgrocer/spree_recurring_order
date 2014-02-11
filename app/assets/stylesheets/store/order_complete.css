@@ -1,5 +1,5 @@
 fieldset#recurring_orders {
-  padding: 100px 30px;
+  padding: 50px 30px;
   text-align: center;
 }
 
@@ -13,7 +13,7 @@ fieldset h3 {
 
 fieldset#recurring_orders input[type='submit'] {
   margin: 20px;
-  padding: 10px 40px;
-  font-size: 36px;
+  padding: 10px 30px;
+  font-size: 24px;
   text-align: center;
 }

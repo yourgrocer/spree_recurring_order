@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spree::RecurringOrdersController do
-  
+
   let(:original_order){ FactoryGirl.build(:order, id: 1, number: 'G1234') }
   let(:orders){ [] }
   let(:recurring_order){ double(Spree::RecurringOrder, save: true, id: 666, orders: orders).as_null_object }
