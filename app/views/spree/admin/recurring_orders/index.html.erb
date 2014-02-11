@@ -25,7 +25,7 @@
     <tbody>
       <% @recurring_orders.each do |order| %>
         <tr class="<%= cycle('odd', 'even') %>">
-          <td class="align-center"><%= order.number %></td>
+          <td class="align-center"><%= link_to order.number, admin_recurring_order_path(order.number) %></td>
           <td class="align-center"><%= link_to order.original_order.number, edit_admin_order_path(order.original_order) %></td>
           <td class="align-center"><%= mail_to order.email %></td>
           <td class="align-center"><%= mail_to order.phone %></td>

@@ -42,6 +42,7 @@ module Spree
       end
       self.number = random if self.number.blank?
       self.number
+      self.save!
     end
 
   end

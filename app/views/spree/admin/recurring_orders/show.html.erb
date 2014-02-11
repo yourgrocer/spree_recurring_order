@@ -1,0 +1,42 @@
+<% content_for :page_title do %>
+  <%= "Recurring Order #{@recurring_order.number}" %>
+<% end %>
+
+<% content_for :sidebar_title do %>
+  <%= Spree.t(:recurring_information) %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <header id="order_tab_summary" data-hook>
+    <dl class="additional-info">
+      <dt id="order_email" data-hook><%= Spree.t(:email) %>:</dt>
+      <dd><%= @recurring_order.email %></dd>
+      <dt id="order_phone" data-hook><%= Spree.t(:phone) %>:</dt>
+      <dd><%= @recurring_order.phone %></dd>
+      <dt id="order_original_order" data-hook><%= Spree.t(:original) %>:</dt>
+      <dd><%= @recurring_order.original_order.number %></dd>
+      <dt id="order_created_at" data-hook><%= Spree.t(:created_date) %>:</dt>
+      <dd><%= l (@recurring_order.created_at).to_date %></dd>
+    </dl>
+  </header>
+<% end %>
+
+<fieldset class='no-border-bottom'>
+  <legend>Orders</legend>
+  <table>
+    <thead>
+      <th><%= Spree.t('number')%></th> 
+      <th><%= Spree.t('created_date')%></th>
+      <th><%= Spree.t('delivery_date')%></th>
+    </thead>
+    <tbody class="with-border">
+      <% @recurring_order.orders.each do |order| %>
+        <tr>
+          <td class="align-center"><strong><%= link_to order.number, edit_admin_order_path(order) %></strong></td>
+          <td class="align-center"><span><%= l (order.created_at).to_date %></span></td>
+          <td class="align-center"><span><%= l (order.delivery_date).to_date %></span></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</fieldset>
