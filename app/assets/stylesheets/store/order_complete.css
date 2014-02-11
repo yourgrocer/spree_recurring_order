@@ -1,8 +1,19 @@
 fieldset#recurring_orders {
+  padding: 100px 30px;
   text-align: center;
 }
 
+fieldset h1 {
+  margin: 20px 0;
+}
+
+fieldset h3 {
+  margin: 15px 0;
+}
+
 fieldset#recurring_orders input[type='submit'] {
-  font-size: 24px;
+  margin: 20px;
+  padding: 10px 40px;
+  font-size: 36px;
   text-align: center;
 }
