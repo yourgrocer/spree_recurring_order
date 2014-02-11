@@ -10,7 +10,8 @@ module Spree
         if @recurring_order.save
           redirect_to(spree.recurring_order_url(@recurring_order.id))
         else
-          render :new
+          flash[:notice] = "Hmmm... There was a problem creating your recurring order. Please get in touch at hello@yourgrocer.com.au and we are going to sort it out for you."
+          redirect_to(order_url(original_order.number))
         end
       else
         flash[:notice] = "Hmmm... It seems like this order already has a recurring order associated with it. Please get in touch at hello@yourgrocer.com.au if you have any doubts about it"

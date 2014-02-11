@@ -42,7 +42,7 @@ describe Spree::RecurringOrdersController do
       recurring_order.should_receive(:save).and_return(false)
 
       spree_post :create, recurring_order: {original_order_id: 1}
-      response.should render_template(:new) 
+      response.should redirect_to("/orders/G1234")
     end
 
     it 'should render order complete if recurring order already exists' do
