@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::OrdersController do
 
-  let(:order) {double(Spree::Order)}
+  let(:order) {double(Spree::Order).as_null_object}
   let(:recurring_order) {double(Spree::RecurringOrder)}
   let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
@@ -10,7 +10,6 @@ describe Spree::OrdersController do
     controller.stub :spree_current_user => user
     controller.stub :check_authorization
   end
-
 
   describe 'show' do
 
