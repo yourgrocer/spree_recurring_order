@@ -5,3 +5,7 @@ form#update-cart .links button {
 div#empty-cart .button {
   margin: 0 5px;
 }
+
+#cart .recurring-message {
+  margin: 10px 0;
+}

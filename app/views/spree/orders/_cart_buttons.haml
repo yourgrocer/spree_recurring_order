@@ -1,6 +1,12 @@
-.links.columns.sixteen.alpha.omega(data-hook="cart_buttons")
-  = order_form.text_field :coupon_code, :size => 10, :placeholder => Spree.t(:coupon_code)
-  = button_tag({:class => 'primary', :id => 'update-button'}) do
-    = Spree.t(:update)
-  = button_tag({:class => 'button checkout primary', :id => 'checkout-link', :name => 'checkout'}) do
-    = Spree.t(:checkout)
+- if @order.recurring?
+  .links.columns.sixteen.alpha.omega(data-hook="cart_buttons")
+    = order_form.text_field :coupon_code, :size => 10, :placeholder => Spree.t(:coupon_code)
+    = button_tag({:class => 'primary', :id => 'update-button'}) do
+      = Spree.t(:update)
+- else
+  .links.columns.sixteen.alpha.omega(data-hook="cart_buttons")
+    = order_form.text_field :coupon_code, :size => 10, :placeholder => Spree.t(:coupon_code)
+    = button_tag({:class => 'primary', :id => 'update-button'}) do
+      = Spree.t(:update)
+    = button_tag({:class => 'button checkout primary', :id => 'checkout-link', :name => 'checkout'}) do
+      = Spree.t(:checkout)
