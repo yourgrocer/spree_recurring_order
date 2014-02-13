@@ -1,2 +1,3 @@
-.columns.sixteen.alpha.omega.recurring-message
-  %h5 This is a recurring order message - you must override it
+- if @order.recurring?
+  .columns.sixteen.alpha.omega.recurring-message
+    %h5 This is a recurring order message - you must override it
