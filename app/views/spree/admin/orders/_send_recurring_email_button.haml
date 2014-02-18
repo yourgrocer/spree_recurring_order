@@ -1,0 +1,2 @@
+- if @order and @order.recurring?
+  %li= button_link_to Spree.t(:send_recurring_email), spree.admin_recurring_email_path(@order.number), :method => :post, :icon => 'icon-email'
