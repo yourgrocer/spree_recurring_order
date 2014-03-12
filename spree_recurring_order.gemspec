@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_recurring_order'
-  s.version     = '2.1.9'
+  s.version     = '2.1.10'
   s.summary     = 'Add the option to create a recurring order'
   s.description = ''
   s.required_ruby_version = '>= 2.0.0'
