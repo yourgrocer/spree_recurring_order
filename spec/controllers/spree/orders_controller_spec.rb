@@ -31,7 +31,7 @@ describe Spree::OrdersController do
     it 'should render show_recurring if order completed is true' do
       spree_get :show, {id: "G2134", order_completed: true}
       assigns(:present_recurring).should == true 
-      response.should render_template('show_recurring')
+      response.should render_template('show_completed')
     end
 
     it 'should render show normally' do

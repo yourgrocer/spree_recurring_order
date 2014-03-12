@@ -7,7 +7,7 @@ Spree::OrdersController.class_eval do
     @recurring_order = Spree::RecurringOrder.new
 
     if @present_recurring
-      render :show_recurring
+      render :show_completed
     else
       render :show
     end
