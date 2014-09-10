@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'delayed_job_active_record'
+  s.add_runtime_dependency 'pg'
 
   s.add_development_dependency 'capybara', '~> 2.1'
   s.add_development_dependency 'coffee-rails'
