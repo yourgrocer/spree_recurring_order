@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '= 2.2.2'
-  s.add_dependency 'spree_frontend', '= 2.2.2'
-  s.add_dependency 'spree_backend', '= 2.2.2'
+  s.add_dependency 'spree_core', '= 2.2.5'
+  s.add_dependency 'spree_frontend', '= 2.2.5'
+  s.add_dependency 'spree_backend', '= 2.2.5'
 
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'delayed_job_active_record'
