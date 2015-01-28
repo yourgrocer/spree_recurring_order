@@ -4,5 +4,14 @@ module Spree
     has_many :items, class_name: 'Spree::RecurringListItem'
 
     validates :user, presence: true
+    validate :items_present
+
+    private
+
+    def items_present
+      if items.empty?
+        errors[:items] << "are empty. Please add at least one item to your regular order"
+      end
+    end
   end
 end
