@@ -1,0 +1,24 @@
+.row
+  .columns.sixteen
+    %h1
+      You can now repeat your orders!
+    %p
+      Make local shopping a regular thing.
+      = "Choose which items you'd like us to deliver every week. You have #{@order.ship_address.firstname}"
+.row
+  .columns.sixteen.alpha.omega
+    %table.fullwidth
+      %thead
+        %tr
+          %th
+          %th= Spree.t(:name)
+          %th= Spree.t(:price)
+          %th= Spree.t(:quantity)
+      %tbody
+        - @order.line_items.each do |item|
+          %tr
+            %td.centered
+              = link_to mini_image(item.product), item.product
+            %td.centered= item.name
+            %td.centered= display_price(item.product)
+            %td.centered= item.quantity
