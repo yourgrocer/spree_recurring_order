@@ -6,8 +6,12 @@ module Spree
       list_params[:recurring_list_items].each do |item|
         @recurring_list.items << Spree::RecurringListItem.new(variant_id: item[:variant_id], quantity: item[:quantity])
       end
-      @recurring_list.save
-      render :show
+      
+      if @recurring_list.save
+        redirect_to account_url
+      else
+        render :new, status: 400
+      end
     end
 
     private

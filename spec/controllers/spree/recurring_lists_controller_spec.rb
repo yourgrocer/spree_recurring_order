@@ -7,6 +7,8 @@ describe Spree::RecurringListsController do
   before :each do
     controller.stub :spree_current_user => user
     controller.stub :check_authorization
+
+    allow(Spree::User).to receive(:find).and_return(user)
   end
 
   describe 'integration' do
@@ -31,10 +33,11 @@ describe Spree::RecurringListsController do
 
     let(:list_item) { double Spree::RecurringListItem }
     let(:list_items) { double "MyArray" }
-    let(:list) { double(Spree::RecurringList, items: list_items).as_null_object }
+    let(:list) { double(Spree::RecurringList, items: list_items) }
 
     before :each do
       allow(Spree::RecurringList).to receive(:new).and_return(list)
+      allow(list).to receive(:save).and_return true
     end
 
     it 'should create list for provided user' do
@@ -49,8 +52,16 @@ describe Spree::RecurringListsController do
       spree_post :create, recurring_list: {user_id: 1, recurring_list_items: [{variant_id: 1, quantity: 2}]}
     end
 
-    it 'should fail and render error if recurring list is not valid'
-    it 'should redirect to my account after creation'
+    it 'should fail and render error if recurring list is not valid' do
+      expect(list).to receive(:save).and_return false
+      spree_post :create, recurring_list: {user_id: 1, recurring_list_items: []}
+      expect(response.status).to eq(400)
+    end
+
+    it 'should redirect to my account after creation' do
+      spree_post :create, recurring_list: {user_id: 1, recurring_list_items: []}
+      expect(response).to redirect_to('/account')
+    end
 
   end
 
