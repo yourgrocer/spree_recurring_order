@@ -49,6 +49,9 @@ describe Spree::RecurringListsController do
       spree_post :create, recurring_list: {user_id: 1, recurring_list_items: [{variant_id: 1, quantity: 2}]}
     end
 
+    it 'should fail and render error if recurring list is not valid'
+    it 'should redirect to my account after creation'
+
   end
 
 end
