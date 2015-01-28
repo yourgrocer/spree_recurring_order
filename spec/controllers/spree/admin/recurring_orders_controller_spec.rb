@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::Admin::RecurringOrdersController do
 
-  let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:user) { double Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
   before :each do
     controller.stub :spree_current_user => user

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::RecurringListsController do
 
-  let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:user) { double Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
   before :each do
     controller.stub :spree_current_user => user
@@ -29,9 +29,9 @@ describe Spree::RecurringListsController do
 
   describe 'create' do
 
-    let(:list_item) { mock_model Spree::RecurringListItem }
-    let(:list_items) { mock_model "MyArray" }
-    let(:list) { mock_model(Spree::RecurringList, items: list_items).as_null_object }
+    let(:list_item) { double Spree::RecurringListItem }
+    let(:list_items) { double "MyArray" }
+    let(:list) { double(Spree::RecurringList, items: list_items).as_null_object }
 
     before :each do
       allow(Spree::RecurringList).to receive(:new).and_return(list)

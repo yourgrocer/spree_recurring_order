@@ -6,13 +6,13 @@ describe Spree::Order do
 
     it 'should be false if order doesnt have a recurring one' do
       order = Spree::Order.new
-      order.recurring?.should be_false
+      order.recurring?.should be_falsey
     end
 
     it 'should be true if order has a recurring one' do
       order = Spree::Order.new
       order.recurring_order = Spree::RecurringOrder.new
-      order.recurring?.should be_true
+      order.recurring?.should be_truthy
     end
 
   end
