@@ -1,6 +1,6 @@
 module Spree
   class RecurringListItem < ActiveRecord::Base
     belongs_to :recurring_list
-    has_one :variant
+    belongs_to :variant, class_name: 'Spree::Variant'
   end
 end
