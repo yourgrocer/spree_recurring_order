@@ -6,8 +6,9 @@ describe Spree::RecurringOrder do
 
     it 'should have many list items' do
       user = FactoryGirl.create(:user)
+      variant = FactoryGirl.create(:variant)
 
-      item = Spree::RecurringListItem.create
+      item = Spree::RecurringListItem.create(variant_id: variant.id, quantity: 1)
       list = Spree::RecurringList.new(user: user)
       list.items << item
       list.save!

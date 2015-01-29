@@ -20,8 +20,8 @@
                 = link_to mini_image(item.variant.product), item.variant.product
               %td.centered= item.variant.name
               %td.centered= display_price(item.variant.product)
-              %td.centered
-                = f.fields_for :items, item do |item_fields|
+              = f.fields_for :items, item do |item_fields|
+                %td.centered
                   = item_fields.hidden_field :variant_id
                   = item_fields.number_field :quantity
 

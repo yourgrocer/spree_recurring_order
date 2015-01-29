@@ -9,6 +9,7 @@ describe Spree::OrdersController do
   before :each do
     controller.stub :spree_current_user => user
     controller.stub :check_authorization
+    allow(Spree::RecurringList).to receive(:new).and_return(nil)
   end
 
   describe 'show' do

@@ -14,13 +14,14 @@ module Spree
     private
     
     def list_params
-      formatted_params = params[:recurring_list].permit(:user_id, items_attributes: [:variant_id, :quantity])
-      if formatted_params["items_attributes"]
-        old_params = formatted_params.delete("items_attributes")
-        formatted_params["items_attributes"] = []
-        old_params.each_value {|value| formatted_params["items_attributes"] << value}
+      recurring_list_params = params["recurring_list"]
+      if recurring_list_params["items_attributes"]
+        old_params = recurring_list_params.delete("items_attributes")
+        recurring_list_params["items_attributes"] = []
+        old_params.each_value {|value| recurring_list_params["items_attributes"] << value if value["selected"] == '1' }
       end
-      formatted_params
+
+      recurring_list_params.permit(:user_id, items_attributes: [:variant_id, :quantity])
     end
 
   end

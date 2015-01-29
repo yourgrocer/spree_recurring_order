@@ -17,7 +17,7 @@ describe Spree::RecurringListsController do
       variant = FactoryGirl.create(:variant)
       new_user = FactoryGirl.create(:user)
       params = {"recurring_list" => {"user_id" => new_user.id, "items_attributes" => {
-        "0"=>{"variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284"}, 
+        "0"=>{"variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284", "selected"=>"1"}, 
       }}}
       spree_post :create, params
 
@@ -51,14 +51,13 @@ describe Spree::RecurringListsController do
     it 'should add list items to list based' do
       expect(Spree::RecurringList).to receive(:new).with(hash_including({
         "items_attributes" => [
-          {"variant_id"=>"7584", "quantity"=>"1"},
           {"variant_id"=>"4953", "quantity"=>"3"}
         ]
       }))
 
       params = {"recurring_list" => {"user_id" => 2, "items_attributes" => {
-        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "id"=>"108284"}, 
-        "1"=>{"variant_id"=>"4953", "quantity"=>"3", "id"=>"108285"}
+        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "id"=>"108284", "selected" => '0'}, 
+        "1"=>{"variant_id"=>"4953", "quantity"=>"3", "id"=>"108285", "selected" => '1'}
       }}}
       spree_post :create, params 
     end
