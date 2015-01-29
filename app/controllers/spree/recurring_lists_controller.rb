@@ -2,7 +2,6 @@ module Spree
   class RecurringListsController < Spree::StoreController
 
     def create
-      debugger
       @recurring_list = Spree::RecurringList.new(list_params)
 
       if @recurring_list.save
