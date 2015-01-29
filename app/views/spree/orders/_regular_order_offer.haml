@@ -7,18 +7,25 @@
       = "Choose which items you'd like us to deliver every week. You have #{@order.ship_address.firstname}"
 .row
   .columns.sixteen.alpha.omega
-    %table.fullwidth
-      %thead
-        %tr
-          %th
-          %th= Spree.t(:name)
-          %th= Spree.t(:price)
-          %th= Spree.t(:quantity)
-      %tbody
-        - @order.line_items.each do |item|
+    = form_for(@recurring_list) do |f|
+      = f.hidden_field :user_id
+      %table.fullwidth
+        %thead
           %tr
-            %td.centered
-              = link_to mini_image(item.product), item.product
-            %td.centered= item.name
-            %td.centered= display_price(item.product)
-            %td.centered= item.quantity
+            %th
+            %th= Spree.t(:name)
+            %th= Spree.t(:price)
+            %th= Spree.t(:quantity)
+        %tbody
+          - @order.line_items.each do |item|
+            %tr
+              %td.centered
+                = link_to mini_image(item.product), item.product
+              %td.centered= item.name
+              %td.centered= display_price(item.product)
+              %td.centered
+                = f.fields_for :items, item do |item_fields|
+                  = item_fields.hidden_field :variant_id
+                  = item_fields.number_field :quantity
+
+      = submit_tag "Next"

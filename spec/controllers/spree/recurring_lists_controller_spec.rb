@@ -16,7 +16,10 @@ describe Spree::RecurringListsController do
     it 'should create new recurring list (integration)' do
       variant = FactoryGirl.create(:variant)
       new_user = FactoryGirl.create(:user)
-      spree_post :create, recurring_list: {user_id: new_user.id, recurring_list_items: [variant_id: variant.id, quantity: 1]}
+      params = {"recurring_list" => {"user_id" => new_user.id, "items_attributes" => {
+        "0"=>{"variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284"}, 
+      }}}
+      spree_post :create, params
 
       recurring_list = Spree::RecurringList.last
       expect(recurring_list.user).to eq(new_user)
@@ -46,10 +49,18 @@ describe Spree::RecurringListsController do
     end
 
     it 'should add list items to list based' do
-      expect(Spree::RecurringListItem).to receive(:new).with(variant_id: '1', quantity: '2').and_return(list_item)
-      expect(list_items).to receive(:<<).with(list_item)
+      expect(Spree::RecurringList).to receive(:new).with(hash_including({
+        "items_attributes" => [
+          {"variant_id"=>"7584", "quantity"=>"1"},
+          {"variant_id"=>"4953", "quantity"=>"3"}
+        ]
+      }))
 
-      spree_post :create, recurring_list: {user_id: 1, recurring_list_items: [{variant_id: 1, quantity: 2}]}
+      params = {"recurring_list" => {"user_id" => 2, "items_attributes" => {
+        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "id"=>"108284"}, 
+        "1"=>{"variant_id"=>"4953", "quantity"=>"3", "id"=>"108285"}
+      }}}
+      spree_post :create, params 
     end
 
     it 'should fail and render error if recurring list is not valid' do
