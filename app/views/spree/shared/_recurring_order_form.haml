@@ -1,6 +1,6 @@
-.row
-  .columns.sixteen.alpha.omega
-    = form_for(@recurring_list) do |f|
+= form_for(@recurring_list) do |f|
+  .row
+    .columns.sixteen.alpha.omega
       = f.hidden_field :user_id
       %table.fullwidth
         %thead
@@ -24,5 +24,6 @@
                 - if show_selected_field
                   %td.centered
                     = item_fields.check_box :selected
-
+  .row
+    .columns.offset-by-thirteen.two.alpha.omega
       = submit_tag "Next"
