@@ -1,0 +1,28 @@
+.row
+  .columns.sixteen.alpha.omega
+    = render :partial => 'spree/shared/error_messages', :locals => { :target => @recurring_list }
+
+.row
+  .columns.sixteen.alpha.omega
+    = form_for(@recurring_list) do |f|
+      = f.hidden_field :user_id
+      %table.fullwidth
+        %thead
+          %tr
+            %th
+            %th= Spree.t(:name)
+            %th= Spree.t(:price)
+            %th= Spree.t(:quantity)
+        %tbody
+          - @recurring_list.items.each do |item|
+            %tr
+              %td.centered
+                = link_to mini_image(item.variant.product), item.variant.product
+              %td.centered= item.variant.name
+              %td.centered= display_price(item.variant.product)
+              %td.centered
+                = f.fields_for :items, item do |item_fields|
+                  = item_fields.hidden_field :variant_id
+                  = item_fields.number_field :quantity
+
+      = submit_tag "Next"
