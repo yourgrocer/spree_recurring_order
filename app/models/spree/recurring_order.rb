@@ -1,9 +1,10 @@
 module Spree
   class RecurringOrder < ActiveRecord::Base
 
-    validate :at_least_one_order
+    validate :at_least_one_order_or_list
 
     has_many :orders
+    has_many :recurring_lists
 
     belongs_to :original_order, class_name: 'Spree::Order'
 
@@ -30,8 +31,10 @@ module Spree
 
     private
 
-    def at_least_one_order
-      self.errors[:orders] << "cannot be empty" if orders.empty?
+    def at_least_one_order_or_list
+      if orders.empty? && recurring_lists.empty?
+        self.errors[:base] << "recurring order needs a order or a recurring list"
+      end
     end
 
     def generate_order_number

@@ -1,6 +1,7 @@
 module Spree
   class RecurringList < ActiveRecord::Base
     belongs_to :user
+    belongs_to :recurring_order
     has_many :items, class_name: 'Spree::RecurringListItem'
     accepts_nested_attributes_for :items
 

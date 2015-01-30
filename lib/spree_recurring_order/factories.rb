@@ -1,6 +1,13 @@
 FactoryGirl.define do
-  # Define your Spree extensions Factories within this file to enable applications, and other extensions to use and override them.
-  #
-  # Example adding this to your spec_helper will load these Factories for use:
-  # require 'spree_recurring_order/factories'
+  factory :recurring_list_item, class: Spree::RecurringListItem do
+    variant
+    quantity 1
+  end
+
+  factory :recurring_list, class: Spree::RecurringList do
+    user
+    after(:build) do |list|
+      list.items << FactoryGirl.build(:recurring_list_item)
+    end
+  end
 end

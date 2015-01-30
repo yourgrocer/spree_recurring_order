@@ -37,10 +37,18 @@ describe Spree::RecurringOrder do
 
   describe 'validation' do
 
-    it 'should have at least one order' do
-     recurring_order = Spree::RecurringOrder.new
-     recurring_order.should_not be_valid
-     recurring_order.errors[:orders].should_not be_empty
+    it 'should not be valid without an order or recurring list' do
+      recurring_order = Spree::RecurringOrder.new
+      recurring_order.should_not be_valid
+      recurring_order.errors[:base].should_not be_empty
+    end
+
+    it 'should be valid with a recurring list' do
+      list = FactoryGirl.create(:recurring_list)
+
+      recurring_order = Spree::RecurringOrder.new
+      recurring_order.recurring_lists << list
+      expect(recurring_order).to be_valid
     end
 
     it 'should be valid with one order' do
