@@ -24,6 +24,7 @@ describe Spree::RecurringListsController do
       recurring_list = Spree::RecurringList.last
       expect(recurring_list.user).to eq(new_user)
       expect(recurring_list.items.count).to eq(1)
+      expect(recurring_list.recurring_order).not_to be_nil
 
       list_item = recurring_list.items.first
       expect(list_item.variant).to eq(variant)
@@ -34,11 +35,13 @@ describe Spree::RecurringListsController do
 
   describe 'create' do
 
+    let(:order) { double Spree::RecurringOrder, recurring_lists: [], save: true }
     let(:list_item) { double Spree::RecurringListItem }
     let(:list_items) { double "MyArray" }
     let(:list) { double(Spree::RecurringList, items: list_items) }
 
     before :each do
+      allow(Spree::RecurringOrder).to receive(:new).and_return(order)
       allow(Spree::RecurringList).to receive(:new).and_return(list)
       allow(list).to receive(:save).and_return true
     end

@@ -3,8 +3,10 @@ module Spree
 
     def create
       @recurring_list = Spree::RecurringList.new(list_params)
+      recurring_order = Spree::RecurringOrder.new
+      recurring_order.recurring_lists << @recurring_list
 
-      if @recurring_list.save
+      if @recurring_list.save && recurring_order.save
         redirect_to account_url
       else
         render :new, status: 400
