@@ -17,6 +17,10 @@ module Spree
       recurring_order
     end
 
+    def base_list
+      @base_list ||= recurring_lists.sort_by{|list| list.created_at}.first
+    end
+
     def original_order
       @original_order ||= orders.sort_by{|order| order.created_at}.first
     end

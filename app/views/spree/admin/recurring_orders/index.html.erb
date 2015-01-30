@@ -2,42 +2,82 @@
   <%= Spree.t(:recurring_orders) %>
 <% end %>
 
-<% if @recurring_orders.any? %>
-  <table class="index responsive" id="listing_orders" data-hook>
-    <colgroup>
-      <col style="width: 25%;">
-      <col style="width: 25%;">
-      <col style="width: 15%;">
-      <col style="width: 15%;">
-      <col style="width: 20%;">
-    </colgroup>
-    <thead>
-      <tr>
-        <th><%= Spree.t(:recurring_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:original_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:customer_email, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:customer_phone, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:active?, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:number_of_orders, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-        <th><%= Spree.t(:created_at, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @recurring_orders.each do |order| %>
-        <tr class="<%= cycle('odd', 'even') %>">
-          <td class="align-center"><%= link_to order.number, admin_recurring_order_path(order.number) %></td>
-          <td class="align-center"><%= link_to order.original_order.number, edit_admin_order_path(order.original_order) %></td>
-          <td class="align-center"><%= mail_to order.email %></td>
-          <td class="align-center"><%= mail_to order.phone %></td>
-          <td class="align-center">YES</td>
-          <td class="align-center"><%= order.orders.count %></td>
-          <td class="align-center"><%= l (order.created_at).to_date %></td>
+<fieldset>
+  <legend align='center'>Orders with recurring lists</legend>
+  <% if @recurring_orders_with_lists.any? %>
+    <table class="index responsive" id="listing_orders" data-hook>
+      <colgroup>
+        <col style="width: 25%;">
+        <col style="width: 25%;">
+        <col style="width: 25%;">
+        <col style="width: 25%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th><%= Spree.t(:recurring_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:customer_email, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:number_of_orders, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:created_at, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <div class="alpha twelve columns no-objects-found">
-    <%= Spree.t(:no_recurring_orders_found, resource: I18n.t(:other, scope: 'activerecord.models.spree/recurring_order')) %>
-  </div>
-<% end %>
+      </thead>
+      <tbody>
+        <% @recurring_orders_with_lists.each do |order| %>
+          <tr class="<%= cycle('odd', 'even') %>">
+            <td class="align-center"><%= link_to order.number, admin_recurring_order_path(order.number) %></td>
+            <td class="align-center"><%= mail_to order.base_list.user.email %></td>
+            <td class="align-center"><%= order.orders.count %></td>
+            <td class="align-center"><%= l (order.created_at).to_date %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+    <div class="alpha twelve columns no-objects-found">
+      <%= Spree.t(:no_recurring_orders_found, resource: I18n.t(:other, scope: 'activerecord.models.spree/recurring_order')) %>
+    </div>
+  <% end %>
+</fieldset>
+
+<fieldset>
+  <legend align='center'>Orders without recurring lists</legend>
+  <% if @recurring_orders.any? %>
+    <table class="index responsive" id="listing_orders" data-hook>
+      <colgroup>
+        <col style="width: 25%;">
+        <col style="width: 25%;">
+        <col style="width: 15%;">
+        <col style="width: 15%;">
+        <col style="width: 20%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th><%= Spree.t(:recurring_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:original_order_number, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:customer_email, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:customer_phone, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:active?, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:number_of_orders, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:created_at, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recurring_orders.each do |order| %>
+          <tr class="<%= cycle('odd', 'even') %>">
+            <td class="align-center"><%= link_to order.number, admin_recurring_order_path(order.number) %></td>
+            <td class="align-center"><%= link_to order.original_order.number, edit_admin_order_path(order.original_order) %></td>
+            <td class="align-center"><%= mail_to order.email %></td>
+            <td class="align-center"><%= mail_to order.phone %></td>
+            <td class="align-center">YES</td>
+            <td class="align-center"><%= order.orders.count %></td>
+            <td class="align-center"><%= l (order.created_at).to_date %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="alpha twelve columns no-objects-found">
+      <%= Spree.t(:no_recurring_orders_found, resource: I18n.t(:other, scope: 'activerecord.models.spree/recurring_order')) %>
+    </div>
+  <% end %>
+</fieldset>
