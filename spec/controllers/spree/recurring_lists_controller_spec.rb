@@ -40,6 +40,8 @@ describe Spree::RecurringListsController do
       expect(list_item.variant).to eq(variant)
       expect(list_item.quantity).to eq(1)
 
+      expect(new_user.base_list).to eq(recurring_list)
+
     end
 
   end
