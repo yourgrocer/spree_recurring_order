@@ -15,29 +15,34 @@
             %tr
               %th
               %th= Spree.t(:name)
-              %th= Spree.t(:price)
               %th= Spree.t(:quantity)
-              %th= "" if @recurring_list.persisted?
-              %th= Spree.t(:make_it_regular) if show_selected_field
+              - if @recurring_list.persisted?
+                %th
+              - if show_selected_field
+                %th= Spree.t(:make_it_regular) 
           %tbody
-            - @recurring_list.items.each do |item|
+            - if @recurring_list.items.empty?
               %tr
-                %td.centered
-                  = link_to mini_image(item.variant.product), item.variant.product
-                %td.centered= item.variant.name
-                %td.centered= display_price(item.variant.product)
-                = f.fields_for :items, item do |item_fields|
+                %td{colspan: 4}
+                  You have no items in your regular list
+            - else
+              - @recurring_list.items.each do |item|
+                %tr
                   %td.centered
-                    = item_fields.hidden_field :variant_id
-                    = item_fields.number_field :quantity
-                  - if show_selected_field
+                    = link_to mini_image(item.variant.product), item.variant.product
+                  %td.centered= item.variant.name
+                  = f.fields_for :items, item do |item_fields|
                     %td.centered
-                      = item_fields.check_box :selected
-                  - else
-                    = item_fields.hidden_field :selected, value: '1' 
-                  - if @recurring_list.persisted?
-                    %td.centered
-                      = link_to image_tag('icons/delete.png'), '#', :class => 'delete', :id => "delete_#{item.id}"
+                      = item_fields.hidden_field :variant_id
+                      = item_fields.number_field :quantity, class: 'quantity'
+                    - if show_selected_field
+                      %td.centered
+                        = item_fields.check_box :selected
+                    - else
+                      = item_fields.hidden_field :selected, value: '1' 
+                    - if @recurring_list.persisted?
+                      %td.centered
+                        = link_to image_tag('icons/delete.png'), '#', :class => 'delete', :id => "delete_#{item.id}"
     .row
       .columns.offset-by-fourteen.two.alpha.omega
         = submit_tag submit_label.titleize 
