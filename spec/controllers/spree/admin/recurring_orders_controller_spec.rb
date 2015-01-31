@@ -13,7 +13,7 @@ describe Spree::Admin::RecurringOrdersController do
 
     it 'should get all recurring orders' do
       orders = []
-      Spree::RecurringOrder.should_receive(:all).and_return(orders)
+      expect(Spree::RecurringOrder).to receive(:all).twice.and_return(orders)
 
       spree_get :index
       assigns(:recurring_orders).should == orders

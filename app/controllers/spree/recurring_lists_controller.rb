@@ -14,7 +14,7 @@ module Spree
     end
 
     private
-    
+
     def list_params
       recurring_list_params = params["recurring_list"]
       if recurring_list_params["items_attributes"]
@@ -23,7 +23,7 @@ module Spree
         old_params.each_value {|value| recurring_list_params["items_attributes"] << value if value["selected"] == '1' }
       end
 
-      recurring_list_params.permit(:user_id, items_attributes: [:variant_id, :quantity])
+      recurring_list_params.permit(:user_id, :timeslot, items_attributes: [:variant_id, :quantity])
     end
 
   end

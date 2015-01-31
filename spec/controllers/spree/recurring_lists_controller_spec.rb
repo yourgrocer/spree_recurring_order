@@ -16,19 +16,28 @@ describe Spree::RecurringListsController do
     it 'should create new recurring list (integration)' do
       variant = FactoryGirl.create(:variant)
       new_user = FactoryGirl.create(:user)
-      params = {"recurring_list" => {"user_id" => new_user.id, "items_attributes" => {
-        "0"=>{"variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284", "selected"=>"1"}, 
-      }}}
+      params = {
+        "recurring_list" => {
+          "timeslot" => "6am to 7:30am",
+          "user_id" => new_user.id, "items_attributes" => {
+            "0"=>{
+              "variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284", "selected"=>"1"
+            }, 
+          }
+        }
+      }
       spree_post :create, params
 
       recurring_list = Spree::RecurringList.last
       expect(recurring_list.user).to eq(new_user)
       expect(recurring_list.items.count).to eq(1)
       expect(recurring_list.recurring_order).not_to be_nil
+      expect(recurring_list.timeslot).to eq('6am to 7:30am')
 
       list_item = recurring_list.items.first
       expect(list_item.variant).to eq(variant)
       expect(list_item.quantity).to eq(1)
+
     end
 
   end
