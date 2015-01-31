@@ -6,6 +6,8 @@ module Spree
     accepts_nested_attributes_for :items
 
     validates :user, presence: true
+    validates :next_delivery_date, presence: true
+    validates :timeslot, presence: true
     validate :items_present
 
     def self.build_from_order(order)
