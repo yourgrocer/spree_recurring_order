@@ -2,4 +2,4 @@
   .columns.sixteen.alpha.omega
     = render :partial => 'spree/shared/error_messages', :locals => { :target => @recurring_list }
 
-= render partial: "spree/shared/recurring_order_form", :locals => { :show_selected_field => false }
+= render partial: "spree/shared/recurring_order_form", :locals => { :show_selected_field => false, :submit_label => 'save' }

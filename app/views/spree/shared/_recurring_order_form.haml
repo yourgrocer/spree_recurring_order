@@ -5,6 +5,11 @@
       = f.hidden_field :timeslot
       = f.hidden_field :next_delivery_date
       %table.fullwidth
+        %colgroup
+          %col{style: "width: 25%;"}
+          %col{style: "width: 45%;"}
+          %col{style: "width: 15%;"}
+          %col{style: "width: 15%;"}
         %thead
           %tr
             %th
@@ -26,6 +31,8 @@
                 - if show_selected_field
                   %td.centered
                     = item_fields.check_box :selected
+                - else
+                  = item_fields.hidden_field :selected, value: '1' 
   .row
-    .columns.offset-by-thirteen.two.alpha.omega
-      = submit_tag "Next"
+    .columns.offset-by-fourteen.two.alpha.omega
+      = submit_tag submit_label.titleize 

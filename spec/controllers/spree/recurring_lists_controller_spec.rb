@@ -22,7 +22,7 @@ describe Spree::RecurringListsController do
           "timeslot" => "6am to 7:30am",
           "user_id" => new_user.id, "items_attributes" => {
             "0"=>{
-              "variant_id"=>variant.id, "quantity"=>"1", "id"=>"108284", "selected"=>"1"
+              "variant_id"=>variant.id, "quantity"=>"1", "selected"=>"1"
             }, 
           }
         }
@@ -72,8 +72,8 @@ describe Spree::RecurringListsController do
       }))
 
       params = {"recurring_list" => {"user_id" => 2, "items_attributes" => {
-        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "id"=>"108284", "selected" => '0'}, 
-        "1"=>{"variant_id"=>"4953", "quantity"=>"3", "id"=>"108285", "selected" => '1'}
+        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "selected" => '0'}, 
+        "1"=>{"variant_id"=>"4953", "quantity"=>"3", "selected" => '1'}
       }}}
       spree_post :create, params 
     end
