@@ -12,6 +12,7 @@ module Spree
       recurring_list = Spree::RecurringList.new
       recurring_list.user_id = order.user.id
       recurring_list.timeslot = order.delivery_time
+      recurring_list.next_delivery_date = order.delivery_date + 7.days
       recurring_list.items = order.line_items.map{|line_item| Spree::RecurringListItem.from_line_item(line_item)}
       recurring_list
     end

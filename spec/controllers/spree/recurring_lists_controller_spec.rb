@@ -18,6 +18,7 @@ describe Spree::RecurringListsController do
       new_user = FactoryGirl.create(:user)
       params = {
         "recurring_list" => {
+          "next_delivery_date" => Date.tomorrow,
           "timeslot" => "6am to 7:30am",
           "user_id" => new_user.id, "items_attributes" => {
             "0"=>{
@@ -33,6 +34,7 @@ describe Spree::RecurringListsController do
       expect(recurring_list.items.count).to eq(1)
       expect(recurring_list.recurring_order).not_to be_nil
       expect(recurring_list.timeslot).to eq('6am to 7:30am')
+      expect(recurring_list.next_delivery_date).to eq(Date.tomorrow)
 
       list_item = recurring_list.items.first
       expect(list_item.variant).to eq(variant)
