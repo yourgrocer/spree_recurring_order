@@ -23,7 +23,7 @@
       <tbody>
         <% @recurring_orders_with_lists.each do |order| %>
           <tr class="<%= cycle('odd', 'even') %>">
-            <td class="align-center"><%= link_to order.number, admin_recurring_order_path(order.number) %></td>
+            <td class="align-center"><%= order.number %></td>
             <td class="align-center"><%= mail_to order.base_list.user.email %></td>
             <td class="align-center"><%= order.orders.count %></td>
             <td class="align-center"><%= l (order.created_at).to_date %></td>
