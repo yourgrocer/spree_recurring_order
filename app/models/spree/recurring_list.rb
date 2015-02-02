@@ -20,7 +20,14 @@ module Spree
     end
 
     def add_item(item_params)
-      self.items << Spree::RecurringListItem.new(item_params)
+      return false unless Spree::Variant.find_by(id: item_params[:variant_id])
+
+      existing_item = items.select{|item| item.variant_id == item_params[:variant_id]}.first
+      if existing_item
+        existing_item.update_attributes(quantity: item_params[:quantity])
+      else
+        self.items << Spree::RecurringListItem.new(item_params)
+      end
       self.save
     end
 
