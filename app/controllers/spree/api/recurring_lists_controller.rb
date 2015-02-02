@@ -8,14 +8,14 @@ module Spree
         recurring_list = Spree::RecurringList.find(params[:id])
         recurring_list.add_item(item_params[:recurring_list_item])
 
-        render json: 'OK', status: 201
+        render json: 'OK'.to_json, status: 200
       end
 
       private
 
       def authorize_user_for_list
         recurring_list = Spree::RecurringList.find(params[:id])
-        if recurring_list.user_id != spree_current_user.id
+        if recurring_list.user_id != current_api_user.id
           render "spree/api/errors/unauthorized", :status => 401 and return
         end
       end

@@ -4,7 +4,7 @@ describe Spree::OrdersController do
 
   let(:order) {double(Spree::Order).as_null_object}
   let(:recurring_order) {double(Spree::RecurringOrder)}
-  let(:user) { double Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:user) { double(Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake').as_null_object }
 
   before :each do
     controller.stub :spree_current_user => user

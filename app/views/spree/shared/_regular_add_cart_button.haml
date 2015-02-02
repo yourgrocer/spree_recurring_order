@@ -1,11 +1,7 @@
-.regular-quick-add-to-cart-form   
-  - order = current_order(lock: true, create_order_if_necessary: false)
-  -# %span.regular-order-path(style="display:none")
-  -#   =  
-  = form_tag api_order_line_items_path(order.number), method: :post do
+.regular-quick-add-to-cart-form
+  = form_tag '/', method: :post do
     .fields
-      = hidden_field_tag "order_token", order.token
-      = hidden_field_tag "line_item[variant_id]", product.master.id
-      = number_field_tag "line_item[quantity]", 1, :class => 'add-quantity', :min => 1
+      = hidden_field_tag "recurring_list_item[variant_id]", product.master.id
+      = number_field_tag "recurring_list_item[quantity]", 1, :class => 'add-quantity', :min => 1
       = button_tag :class => 'green-button add-button', :type => :submit do
         = Spree.t(:regular_list)

@@ -16,7 +16,7 @@ describe Spree::Api::RecurringListsController do
 
       api_put :update, id: list.id, recurring_list_item: {variant_id: variant.id, quantity: 3}
 
-      expect(response.status).to eq(201)
+      expect(response.status).to eq(200)
       expect(list.reload.items.map{|item| item.variant_id}).to include(variant.id)
     end
 
@@ -31,7 +31,7 @@ describe Spree::Api::RecurringListsController do
       expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(true)
 
       api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
-      expect(response.status).to eq(201)
+      expect(response.status).to eq(200)
     end
 
     it 'should fail if recurring list is not found' do

@@ -5,7 +5,7 @@ describe Spree::RecurringOrdersController do
   let(:original_order){ FactoryGirl.build(:order, id: 1, number: 'G1234') }
   let(:orders){ [] }
   let(:recurring_order){ double(Spree::RecurringOrder, save: true, id: 666, orders: orders).as_null_object }
-  let(:user) { double Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:user) { double(Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake').as_null_object }
 
   before :each do
     controller.stub :spree_current_user => user

@@ -22,7 +22,7 @@ module Spree
     def add_item(item_params)
       return false unless Spree::Variant.find_by(id: item_params[:variant_id])
 
-      existing_item = items.select{|item| item.variant_id == item_params[:variant_id]}.first
+      existing_item = items.select{|item| item.variant_id == item_params[:variant_id].to_i}.first
       if existing_item
         existing_item.update_attributes(quantity: item_params[:quantity])
       else
