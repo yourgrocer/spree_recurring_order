@@ -51,7 +51,16 @@ describe Spree::Api::RecurringListsController do
       expect(response.status).to eq(401)
     end
 
-    it 'should not allow update if user is not logged in'
+    it 'should not allow update if user is not logged in' do
+      allow(controller).to receive(:spree_current_user).and_return(nil)
+
+      other_recurring_list = FactoryGirl.build(:recurring_list, user_id: 4)
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
+      expect(recurring_list).not_to receive(:add_item)
+
+      api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
+      expect(response.status).to eq(401)
+    end
 
   end
 
