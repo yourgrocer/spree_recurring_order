@@ -2,6 +2,8 @@ module Spree
   module Api
     class RecurringListsController < Spree::Api::BaseController
 
+      before_filter :authorize_user_for_list
+
       def update
         recurring_list = Spree::RecurringList.find(params[:id])
         recurring_list.add_item(item_params[:recurring_list_item])
@@ -10,6 +12,13 @@ module Spree
       end
 
       private
+
+      def authorize_user_for_list
+        recurring_list = Spree::RecurringList.find(params[:id])
+        if recurring_list.user_id != spree_current_user.id
+          render "spree/api/errors/unauthorized", :status => 401 and return
+        end
+      end
 
       def item_params
         params.permit(recurring_list_item: [:variant_id, :quantity])

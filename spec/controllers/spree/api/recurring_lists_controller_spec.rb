@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::Api::RecurringListsController do
 
-  let(:user) { mock_model Spree::User, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
   before :each do
     controller.stub :spree_current_user => user
@@ -34,13 +34,22 @@ describe Spree::Api::RecurringListsController do
       expect(response.status).to eq(201)
     end
 
-    it 'should create recurring list for user if it doesnt exist'
+    it 'should fail if recurring list is not found' do
+      api_put :update, id: 3, recurring_list_item: {variant_id: 123, quantity: 3}
+      expect(response.status).to eq(404)
+    end
 
-    it 'should display message if update is successful'
+    it 'should not allow update if user doesnt own recurring list' do
+      new_user = double(Spree::User, id: 3, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake')
+      allow(controller).to receive(:spree_current_user).and_return(new_user)
 
-    it 'should display error message if update fails'
+      other_recurring_list = FactoryGirl.build(:recurring_list, user_id: 4)
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
+      expect(recurring_list).not_to receive(:add_item)
 
-    it 'should not allow update if user doesnt own recurring list'
+      api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
+      expect(response.status).to eq(401)
+    end
 
     it 'should not allow update if user is not logged in'
 
