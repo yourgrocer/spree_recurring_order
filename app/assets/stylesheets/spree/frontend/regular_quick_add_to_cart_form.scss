@@ -1,0 +1,58 @@
+$break-tablet: 1170px;
+$break-phone: 970px;
+
+.regular-quick-add-to-cart-form {
+  margin-top: 5px;
+
+  .fields {
+    height: 25px;
+
+    .add-quantity, .add-button {
+      height: 100%;
+      display: inline-block;
+    }
+
+    .add-quantity {
+      width: 50px;
+      margin-right: 0;
+    }
+
+    .add-button {
+      width: 105px;
+    }
+  }
+}
+
+@media screen and (max-width: $break-tablet) {
+  .regular-quick-add-to-cart-form {
+
+    .fields {
+      .add-quantity {
+        width: 35px;
+        margin-right: 0;
+      }
+
+      .add-button {
+        width: 85px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $break-phone) {
+  .regular-quick-add-to-cart-form {
+
+    .fields {
+      .add-quantity {
+        width: 35px;
+        margin-right: 0;
+      }
+
+      .add-button {
+        width: 85px;
+        font-size: 12px;
+      }
+    }
+  }
+}
