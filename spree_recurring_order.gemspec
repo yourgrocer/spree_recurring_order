@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'spree_core', '= 2.2.5'
   s.add_dependency 'spree_frontend', '= 2.2.5'
   s.add_dependency 'spree_backend', '= 2.2.5'
+  s.add_dependency 'spree_api', '= 2.2.5'
 
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'delayed_job_active_record'

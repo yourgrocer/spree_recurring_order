@@ -29,6 +29,10 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/authorization_helpers'
 require 'spree/testing_support/url_helpers'
 
+require 'spree/api/testing_support/caching'
+require 'spree/api/testing_support/helpers'
+require 'spree/api/testing_support/setup'
+
 # Requires factories defined in lib/spree_recurring_order/factories.rb
 require 'spree_recurring_order/factories'
 
@@ -44,6 +48,13 @@ RSpec.configure do |config|
   # current_path.should eql(spree.products_path)
   config.include Spree::TestingSupport::UrlHelpers
   config.include Spree::TestingSupport::ControllerRequests 
+
+  config.include Spree::Api::TestingSupport::Helpers, :type => :controller
+  config.extend Spree::Api::TestingSupport::Setup, :type => :controller
+
+  config.before do
+    Spree::Api::Config[:requires_authentication] = true
+  end
 
   # == Mock Framework
   #

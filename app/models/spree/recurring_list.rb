@@ -19,6 +19,11 @@ module Spree
       recurring_list
     end
 
+    def add_item(item_params)
+      self.items << Spree::RecurringListItem.new(item_params)
+      self.save
+    end
+
     private
 
     def items_present

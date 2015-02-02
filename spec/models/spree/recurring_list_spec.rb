@@ -18,4 +18,21 @@ describe Spree::RecurringOrder do
 
   end
 
+  describe 'add_item' do
+
+    it 'should add item if it doesnt exist' do
+      list = Spree::RecurringList.new
+      list.add_item(variant_id: 1, quantity: 2)
+
+      expect(list.items.empty?).to be_falsey
+      expect(list.items.last.variant_id).to eq(1)
+      expect(list.items.last.quantity).to eq(2)
+    end
+
+    it 'should update item if it exists'
+    it 'should fail and not update if variant_id is invalid'
+    it 'should fail and not update if quantity is invalid'
+
+  end
+
 end
