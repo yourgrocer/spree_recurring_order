@@ -39,6 +39,14 @@ describe Spree::Api::RecurringListsController do
       expect(response.status).to eq(404)
     end
 
+    it 'should fail if update fails' do
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(false)
+
+      api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
+      expect(response.status).to eq(400)
+    end
+
     it 'should not allow update if user doesnt own recurring list' do
       new_user = double(Spree::User, id: 3, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake')
       allow(controller).to receive(:spree_current_user).and_return(new_user)

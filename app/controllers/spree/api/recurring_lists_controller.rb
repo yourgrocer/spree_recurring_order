@@ -6,9 +6,11 @@ module Spree
 
       def update
         recurring_list = Spree::RecurringList.find(params[:id])
-        recurring_list.add_item(item_params[:recurring_list_item])
-
-        render json: 'OK'.to_json, status: 200
+        if recurring_list.add_item(item_params[:recurring_list_item])
+          render json: 'OK'.to_json, status: 200
+        else
+          render json: 'Update failed'.to_json, status: 400
+        end
       end
 
       private

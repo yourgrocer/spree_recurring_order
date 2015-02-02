@@ -32,12 +32,13 @@ describe Spree::RecurringOrder do
     it 'should update item if it exists' do
       list = FactoryGirl.create(:recurring_list) 
       variant_id = list.items.first.variant_id
+      quantity = list.items.first.quantity
 
       expect(list.add_item(variant_id: variant_id, quantity: 99)).to be_truthy
 
       expect(list.items.size).to eq(1) 
       expect(list.items.last.variant_id).to eq(variant_id)
-      expect(list.items.last.quantity).to eq(99)
+      expect(list.items.last.quantity).to eq(99 + quantity)
     end
 
     it 'should fail and not update if variant_id is invalid' do

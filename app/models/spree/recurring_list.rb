@@ -24,7 +24,7 @@ module Spree
 
       existing_item = items.select{|item| item.variant_id == item_params[:variant_id].to_i}.first
       if existing_item
-        existing_item.update_attributes(quantity: item_params[:quantity])
+        existing_item.update_attributes(quantity: existing_item.quantity + item_params[:quantity].to_i)
       else
         self.items << Spree::RecurringListItem.new(item_params)
       end

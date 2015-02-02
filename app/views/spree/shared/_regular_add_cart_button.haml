@@ -1,7 +1,8 @@
-.regular-quick-add-to-cart-form
-  = form_tag '/', method: :post do
-    .fields
-      = hidden_field_tag "recurring_list_item[variant_id]", product.master.id
-      = number_field_tag "recurring_list_item[quantity]", 1, :class => 'add-quantity', :min => 1
-      = button_tag :class => 'green-button add-button', :type => :submit do
-        = Spree.t(:regular_list)
+- if try_spree_current_user && try_spree_current_user.base_list
+  .regular-quick-add-to-cart-form
+    = form_tag '/', method: :post do
+      .fields
+        = hidden_field_tag "recurring_list_item[variant_id]", product.master.id
+        = number_field_tag "recurring_list_item[quantity]", 1, :class => 'add-quantity', :min => 1
+        = button_tag :class => 'green-button add-button', :type => :submit do
+          = Spree.t(:regular_list)
