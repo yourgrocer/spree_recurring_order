@@ -44,7 +44,7 @@ function SpreeRegularQuickCart() {
       button.text("Adding..");
     } else {
       button.removeAttr("disabled");
-      button.text("Regular List");
+      button.text("Add Regular");
     }
   };
 
