@@ -6,14 +6,27 @@ module Spree
 
       def update
         recurring_list = Spree::RecurringList.find(params[:id])
-        if recurring_list.add_item(item_params[:recurring_list_item])
-          render json: 'OK'.to_json, status: 200
+        if destroy_item?
+          recurring_list.remove_item(id: item_params[:recurring_list_item][:id]) ? return_success : return_failure
         else
-          render json: 'Update failed'.to_json, status: 400
+          recurring_list.add_item(item_params[:recurring_list_item]) ? return_success : return_failure
         end
       end
 
+
       private
+
+      def destroy_item?
+        !params[:recurring_list_item][:destroy].nil?
+      end
+
+      def return_success
+        render json: 'OK'.to_json, status: 200
+      end
+
+      def return_failure
+        render json: 'Update failed'.to_json, status: 400
+      end
 
       def authorize_user_for_list
         recurring_list = Spree::RecurringList.find(params[:id])
@@ -23,7 +36,7 @@ module Spree
       end
 
       def item_params
-        params.permit(recurring_list_item: [:variant_id, :quantity])
+        params.permit(recurring_list_item: [:id, :variant_id, :quantity])
       end
 
     end

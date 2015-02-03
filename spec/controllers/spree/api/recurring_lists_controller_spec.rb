@@ -34,6 +34,15 @@ describe Spree::Api::RecurringListsController do
       expect(response.status).to eq(200)
     end
 
+    it 'should remove item from the list if destroy param is passed' do
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      expect(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
+
+      api_put :update, id: 1, recurring_list_item: {id: 123, destroy: true}
+      expect(response.status).to eq(200)
+    end
+
+
     it 'should fail if recurring list is not found' do
       api_put :update, id: 3, recurring_list_item: {variant_id: 123, quantity: 3}
       expect(response.status).to eq(404)

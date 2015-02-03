@@ -18,6 +18,23 @@ describe Spree::RecurringOrder do
 
   end
 
+  describe 'remove_item' do
+
+    it 'should remove item' do
+      list = FactoryGirl.create(:recurring_list) 
+      item = list.items.first
+      expect(list.remove_item(id: item.id)).to be_truthy
+      expect(list.items.reload).to be_empty
+    end
+
+    it 'should fail if item doesnt exist' do
+      list = FactoryGirl.create(:recurring_list) 
+      expect(list.remove_item(id: 666)).to be_falsey
+      expect(list.items.reload).not_to be_empty
+    end
+
+  end
+
   describe 'add_item' do
 
     it 'should add item if it doesnt exist' do

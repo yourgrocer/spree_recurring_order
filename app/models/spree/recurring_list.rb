@@ -19,6 +19,11 @@ module Spree
       recurring_list
     end
 
+    def remove_item(item_params)
+      item = items.where(item_params).first
+      item.nil? ? false : item.destroy
+    end
+
     def add_item(item_params)
       return false unless Spree::Variant.find_by(id: item_params[:variant_id])
 
