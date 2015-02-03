@@ -4,5 +4,5 @@
       .fields
         = hidden_field_tag "recurring_list_item[variant_id]", product.master.id
         = number_field_tag "recurring_list_item[quantity]", 1, :class => 'add-quantity', :min => 1
-        = button_tag :class => 'green-button add-button', :type => :submit do
+        = button_tag :class => 'secondary-button add-button', :type => :submit do
           = Spree.t(:add_regular)
