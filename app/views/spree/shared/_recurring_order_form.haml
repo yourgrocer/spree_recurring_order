@@ -42,7 +42,7 @@
                       = item_fields.hidden_field :selected, value: '1' 
                     - if @recurring_list.persisted?
                       %td.centered
-                        = link_to image_tag('icons/delete.png'), '#', :class => 'delete', :id => "delete_#{item.id}"
+                        = link_to image_tag('icons/delete.png'), '#', :class => 'delete', :id => "delete_#{@recurring_list.id}_#{item.id}"
     .row
       .columns.offset-by-fourteen.two.alpha.omega
         = submit_tag submit_label.titleize 
