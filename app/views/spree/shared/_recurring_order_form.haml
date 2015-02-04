@@ -37,7 +37,7 @@
                       = item_fields.number_field :quantity, class: 'quantity'
                     - if show_selected_field
                       %td.centered
-                        = item_fields.check_box :selected
+                        = item_fields.check_box :selected, checked: true 
                     - else
                       = item_fields.hidden_field :selected, value: '1' 
                     - if @recurring_list.persisted?
