@@ -6,6 +6,19 @@
   <%= Spree.t(:recurring_information) %>
 <% end %>
 
+<% if @recurring_order.base_list %>
+  <% content_for :sidebar do %>
+    <header id="order_tab_summary" data-hook>
+      <dl class="additional-info">
+        <dt id="order_next_delivery_date" data-hook><%= Spree.t(:next) %>:</dt>
+        <dd><%= l (@recurring_order.base_list.next_delivery_date).to_date %></dd>
+        <dt id="order_deliery_timeslot" data-hook><%= Spree.t(:timeslot) %>:</dt>
+        <dd><%= @recurring_order.base_list.timeslot %></dd>
+      </dl>
+    </header>
+  <% end %>
+<% end %>
+
 <% content_for :sidebar do %>
   <header id="order_tab_summary" data-hook>
     <dl class="additional-info">
@@ -19,6 +32,28 @@
       <dd><%= l (@recurring_order.created_at).to_date %></dd>
     </dl>
   </header>
+<% end %>
+
+<% if @recurring_order.base_list %>
+  <fieldset class='no-border-bottom'>
+    <legend>Recurring List</legend>
+    <table>
+      <thead>
+        <th><%= Spree.t('quantity')%></th> 
+        <th><%= Spree.t('name')%></th>
+        <th><%= Spree.t('sku')%></th>
+      </thead>
+      <tbody class="with-border">
+        <% @recurring_order.base_list.items.each do |item| %>
+          <tr>
+            <td class="align-center"><span><%= item.quantity %></span></td>
+            <td class="align-center"><span><%= item.variant.name %></span></td>
+            <td class="align-center"><span><%= item.variant.sku %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
 <% end %>
 
 <fieldset class='no-border-bottom'>
