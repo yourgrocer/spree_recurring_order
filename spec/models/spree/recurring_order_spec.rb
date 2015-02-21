@@ -65,17 +65,41 @@ describe Spree::RecurringOrder do
     let(:ship_address){FactoryGirl.build(:address)}
     let(:order){FactoryGirl.build(:order, ship_address: ship_address)}
 
-    before :each do
-      @recurring_order = Spree::RecurringOrder.new
-      @recurring_order.orders << order
+    context 'with original order' do
+
+      before :each do
+        @recurring_order = Spree::RecurringOrder.new
+        @recurring_order.orders << order
+      end
+
+      it 'should delegate customer email to original order' do
+        @recurring_order.email.should == order.email
+      end
+
+
+      it 'should delegate customer phone to original order' do
+        @recurring_order.phone.should == order.ship_address.phone
+      end
+
     end
 
-    it 'should delegate customer email to original order' do
-      @recurring_order.email.should == order.email
-    end
+    context 'with recurring list' do
 
-    it 'should delegate customer phone to original order' do
-      @recurring_order.phone.should == order.ship_address.phone
+      before :each do
+        @recurring_order = Spree::RecurringOrder.new
+        @user = FactoryGirl.build(:user, email: 'test@email.com')
+        @recurring_list = FactoryGirl.build(:recurring_list, user: @user)
+        @recurring_order.recurring_lists << @recurring_list
+      end
+
+      it 'should delegate customer email to recurring list user' do
+        @recurring_order.email.should == @user.email
+      end
+
+      it 'should be NA if there is no original order' do
+        @recurring_order.phone.should == 'N/A' 
+      end
+
     end
 
   end
