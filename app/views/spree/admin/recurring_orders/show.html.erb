@@ -14,7 +14,7 @@
       <dt id="order_phone" data-hook><%= Spree.t(:phone) %>:</dt>
       <dd><%= @recurring_order.phone %></dd>
       <dt id="order_original_order" data-hook><%= Spree.t(:original) %>:</dt>
-      <dd><%= @recurring_order.original_order.number %></dd>
+      <dd><%= @recurring_order.original_order.number rescue 'N/A'%></dd>
       <dt id="order_created_at" data-hook><%= Spree.t(:created_date) %>:</dt>
       <dd><%= l (@recurring_order.created_at).to_date %></dd>
     </dl>

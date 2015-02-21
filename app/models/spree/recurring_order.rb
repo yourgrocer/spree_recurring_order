@@ -26,11 +26,11 @@ module Spree
     end
 
     def email
-      original_order.email
+      base_list.nil? ? original_order.email : base_list.user.email
     end
 
     def phone
-      original_order.ship_address.phone rescue ''
+      original_order.ship_address.phone rescue 'N/A'
     end
 
     private
