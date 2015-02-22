@@ -14,10 +14,12 @@ describe Spree::Admin::RecurringListOrdersController do
     describe 'integration' do
 
       it 'should create new order based on recurring list' do
+        pending("WIP")
         address = FactoryGirl.create(:address)
         old_order = FactoryGirl.create(:order, state: 'complete', completed_at: Time.now, ship_address: address, bill_address: address)
-        user = FactoryGirl.build(:user, email: 'test@email.com', orders: [old_order])
-        recurring_list = FactoryGirl.build(:recurring_list, user: user)
+        user = FactoryGirl.create(:user, email: 'test@email.com')
+        user.orders << old_order
+        recurring_list = FactoryGirl.create(:recurring_list, user: user)
         recurring_order = Spree::RecurringOrder.create(recurring_lists: [recurring_list])
 
         spree_post :create, recurring_order_id: recurring_order.id 
