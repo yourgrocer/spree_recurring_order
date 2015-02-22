@@ -1,6 +1,9 @@
 Spree::Core::Engine.routes.draw do
 
-  resource :recurring_orders, only: [:create]
+  resources :recurring_orders, only: [:create] do
+    resources :recurring_list_orders, only: [:create]
+  end
+
   resources :recurring_lists, only: [:create, :update]
   resources :recurring_list_items, only: [:destroy]
 
