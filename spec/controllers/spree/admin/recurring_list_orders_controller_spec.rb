@@ -40,7 +40,7 @@ describe Spree::Admin::RecurringListOrdersController do
 
       before :each do
         allow(Spree::RecurringOrder).to receive(:find).with("1").and_return(recurring_order)
-        allow(Spree::Order).to receive(:create).and_return(new_order)
+        allow(Spree::Order).to receive(:new).and_return(new_order)
 
         allow(Spree::OrderContents).to receive(:new).and_return(order_contents)
         allow(order_contents).to receive(:add)
@@ -49,6 +49,7 @@ describe Spree::Admin::RecurringListOrdersController do
       it 'should set email and created by' do
         expect(new_order).to receive(:email=).with('test@email.com')
         expect(new_order).to receive(:created_by=).with(normal_user)
+
         spree_post :create, recurring_order_id: recurring_order.id 
       end
 
@@ -92,7 +93,11 @@ describe Spree::Admin::RecurringListOrdersController do
         expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
       end
 
-      it 'should fail if order validation fails'
+      it 'should fail if order validation fails' do
+        allow(new_order).to receive(:save).and_return false
+        spree_post :create, recurring_order_id: recurring_order.id
+        expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
+      end
 
     end
 

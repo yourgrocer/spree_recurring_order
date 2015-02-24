@@ -10,7 +10,7 @@ module Spree
         elsif order_to_merge && order_to_merge.delivery_date
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
-          @order = Spree::Order.create
+          @order = Spree::Order.new
           @order.recurring_order = @recurring_order
           @order.email = base_list.user.email
           @order.created_by = base_list.user
@@ -21,15 +21,18 @@ module Spree
 
           set_extended_values
 
-          @order.save!
+          if @order.save
+            @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
+            order_contents = Spree::OrderContents.new(@order)
+            base_list.items.each do |item|
+              order_contents.add(item.variant, item.quantity)
+            end
 
-          @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
-          order_contents = Spree::OrderContents.new(@order)
-          base_list.items.each do |item|
-            order_contents.add(item.variant, item.quantity)
+            redirect_to(edit_admin_order_url(@order.number))
+          else
+            fail_with_message('New order validation failed')
           end
 
-          redirect_to(edit_admin_order_url(@order.number))
         end
       end
 
