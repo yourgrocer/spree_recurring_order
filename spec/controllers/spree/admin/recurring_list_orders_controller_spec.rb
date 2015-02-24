@@ -66,8 +66,14 @@ describe Spree::Admin::RecurringListOrdersController do
         expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
       end
 
-      it 'should fail if recurring order doesnt have a base list'
-      it 'should display error if delivery time is invalid'
+      it 'should fail if recurring order doesnt have a base list' do
+        invalid_recurring_order = double(Spree::RecurringOrder, id: 1, number: '1234', base_list: nil)
+        allow(Spree::RecurringOrder).to receive(:find).and_return(invalid_recurring_order)
+
+        spree_post :create, recurring_order_id: recurring_order.id 
+        expect(response).to redirect_to("/admin/recurring_orders/#{invalid_recurring_order.number}")
+      end
+
       it 'should fail if user has already an order in progress'
       it 'should merge with cart order if user has one'
     end
