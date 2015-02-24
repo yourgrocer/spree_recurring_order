@@ -33,12 +33,12 @@ describe Spree::Admin::RecurringListOrdersController do
 
     context 'mocks' do
 
-      let(:new_order){double(Spree::Order, id: 123, number: 'A123').as_null_object}
+      let(:new_order){double(Spree::Order, id: 123, number: 'A123', delivery_date: nil).as_null_object}
       let(:order_contents){double(Spree::OrderContents).as_null_object}
-      let(:normal_user){double(Spree::User, email: 'test@email.com').as_null_object}
+      let(:normal_user){double(Spree::User, email: 'test@email.com', last_incomplete_spree_order: nil).as_null_object}
       let(:item){FactoryGirl.build(:recurring_list_item)}
       let(:base_list){double(Spree::RecurringList, user: normal_user, items: [item])}
-      let(:recurring_order){double(Spree::RecurringOrder, id: 1, base_list: base_list)}
+      let(:recurring_order){double(Spree::RecurringOrder, id: 1, number: '1234', base_list: base_list)}
 
       before :each do
         allow(Spree::RecurringOrder).to receive(:find).with("1").and_return(recurring_order)
@@ -75,7 +75,7 @@ describe Spree::Admin::RecurringListOrdersController do
       end
 
       it 'should merge with cart order if user has one' do
-        incomplete_order = double(Spree::Order, id: 1234, number: 'A1234').as_null_object
+        incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: nil).as_null_object
         allow(normal_user).to receive(:last_incomplete_spree_order).and_return(incomplete_order)
 
         expect(new_order).to receive(:merge!).with(incomplete_order)
@@ -84,7 +84,15 @@ describe Spree::Admin::RecurringListOrdersController do
         expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
       end
 
-      it 'should fail if user has already an order in progress'
+      it 'should fail if user has already an order with a delivery date' do
+        incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: Date.tomorrow).as_null_object
+        allow(normal_user).to receive(:last_incomplete_spree_order).and_return(incomplete_order)
+
+        expect(Spree::Order).not_to receive(:create)
+        spree_post :create, recurring_order_id: recurring_order.id
+
+        expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
+      end
 
     end
 
