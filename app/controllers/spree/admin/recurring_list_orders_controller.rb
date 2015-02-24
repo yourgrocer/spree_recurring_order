@@ -5,7 +5,10 @@ module Spree
       def create
         @recurring_order = Spree::RecurringOrder.find(params[:recurring_order_id])
 
-        if @recurring_order.base_list
+        if base_list 
+
+          order_to_merge = base_list.user.last_incomplete_spree_order
+
           @order = Order.create
           @order.recurring_order = @recurring_order
           @order.email = base_list.user.email
@@ -19,10 +22,13 @@ module Spree
 
           @order.save!
 
+          @order.merge!(order_to_merge) if order_to_merge
+
           order_contents = Spree::OrderContents.new(@order)
           base_list.items.each do |item|
             order_contents.add(item.variant, item.quantity)
           end
+
 
           redirect_to(edit_admin_order_url(@order.number))
         else

@@ -74,8 +74,18 @@ describe Spree::Admin::RecurringListOrdersController do
         expect(response).to redirect_to("/admin/recurring_orders/#{invalid_recurring_order.number}")
       end
 
+      it 'should merge with cart order if user has one' do
+        incomplete_order = double(Spree::Order, id: 1234, number: 'A1234').as_null_object
+        allow(normal_user).to receive(:last_incomplete_spree_order).and_return(incomplete_order)
+
+        expect(new_order).to receive(:merge!).with(incomplete_order)
+        spree_post :create, recurring_order_id: recurring_order.id
+
+        expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
+      end
+
       it 'should fail if user has already an order in progress'
-      it 'should merge with cart order if user has one'
+
     end
 
   end
