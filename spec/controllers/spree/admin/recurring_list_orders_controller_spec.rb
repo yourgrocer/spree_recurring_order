@@ -14,11 +14,9 @@ describe Spree::Admin::RecurringListOrdersController do
     describe 'integration' do
 
       it 'should create new order based on recurring list' do
-        pending("WIP")
         address = FactoryGirl.create(:address)
-        old_order = FactoryGirl.create(:order, state: 'complete', completed_at: Time.now, ship_address: address, bill_address: address)
         user = FactoryGirl.create(:user, email: 'test@email.com')
-        user.orders << old_order
+        old_order = FactoryGirl.create(:order, user: user, state: 'complete', completed_at: Time.now, ship_address: address, bill_address: address)
         recurring_list = FactoryGirl.create(:recurring_list, user: user)
         recurring_order = Spree::RecurringOrder.create(recurring_lists: [recurring_list])
 
@@ -93,6 +91,8 @@ describe Spree::Admin::RecurringListOrdersController do
 
         expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
       end
+
+      it 'should fail if order validation fails'
 
     end
 

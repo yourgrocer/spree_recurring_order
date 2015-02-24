@@ -10,7 +10,7 @@ module Spree
         elsif order_to_merge && order_to_merge.delivery_date
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
-          @order = Order.create
+          @order = Spree::Order.create
           @order.recurring_order = @recurring_order
           @order.email = base_list.user.email
           @order.created_by = base_list.user
@@ -23,8 +23,7 @@ module Spree
 
           @order.save!
 
-          @order.merge!(order_to_merge) if order_to_merge
-
+          @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
           order_contents = Spree::OrderContents.new(@order)
           base_list.items.each do |item|
             order_contents.add(item.variant, item.quantity)
