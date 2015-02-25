@@ -14,6 +14,7 @@ This gem was built so the user can show the intention of subscribing to a recurr
 
 The gem also blocks the checkout path when a user has a recurring order in their cart, since the recurring orders are supposed to be processed offline.
 
+
 Installation
 ------------
 

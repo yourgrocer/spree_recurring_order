@@ -5,28 +5,43 @@ module Spree
       def create
         @recurring_order = Spree::RecurringOrder.find(params[:recurring_order_id])
 
-        @order = Order.create
-        @order.recurring_order = @recurring_order
-        @order.email = base_list.user.email
-        @order.created_by = base_list.user
-        @order.user = base_list.user
+        if base_list.nil?
+          fail_with_message('Recurring order does not have a base list')
+        elsif order_to_merge && order_to_merge.delivery_date
+          fail_with_message('User has already an existing incomplete order with delivery date set')
+        else
+          @order = Spree::Order.new
+          @order.recurring_order = @recurring_order
+          @order.email = base_list.user.email
+          @order.created_by = base_list.user
+          @order.user = base_list.user
 
-        @order.ship_address = ship_address(base_list) 
-        @order.bill_address = bill_address(base_list) 
+          @order.ship_address = ship_address(base_list) 
+          @order.bill_address = bill_address(base_list) 
 
-        set_extended_values
+          set_extended_values
 
-        @order.save!
+          if @order.save
+            @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
+            order_contents = Spree::OrderContents.new(@order)
+            base_list.items.each do |item|
+              order_contents.add(item.variant, item.quantity)
+            end
 
-        order_contents = Spree::OrderContents.new(@order)
-        base_list.items.each do |item|
-          order_contents.add(item.variant, item.quantity)
+            redirect_to(edit_admin_order_url(@order.number))
+          else
+            fail_with_message('New order validation failed')
+          end
+
         end
-
-        redirect_to(edit_admin_order_url(@order.number))
       end
 
       private
+
+      def fail_with_message(message)
+        flash[:error] = "Order creation failed - #{message}" 
+        redirect_to(admin_recurring_order_url(@recurring_order.number))
+      end
 
       def set_extended_values
         #To be overriden
@@ -42,6 +57,11 @@ module Spree
 
       def base_list
         @recurring_order.base_list
+      end
+
+      def order_to_merge
+        @order_to_merge ||= base_list.nil? ? nil : base_list.user.last_incomplete_spree_order
+        @order_to_merge
       end
 
     end

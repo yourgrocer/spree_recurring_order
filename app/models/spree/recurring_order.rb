@@ -44,7 +44,7 @@ module Spree
     def generate_order_number
       record = true
       while record
-        random = "R#{Array.new(6){rand(6)}.join}"
+        random = "RO#{Array.new(9){rand(9)}.join}"
         record = self.class.where(number: random).first
       end
       self.number = random if self.number.blank?
