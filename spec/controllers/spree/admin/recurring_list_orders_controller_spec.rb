@@ -35,7 +35,7 @@ describe Spree::Admin::RecurringListOrdersController do
       let(:order_contents){double(Spree::OrderContents).as_null_object}
       let(:normal_user){double(Spree::User, email: 'test@email.com', last_incomplete_spree_order: nil).as_null_object}
       let(:item){FactoryGirl.build(:recurring_list_item)}
-      let(:base_list){double(Spree::RecurringList, user: normal_user, items: [item])}
+      let(:base_list){double(Spree::RecurringList, user: normal_user, items: [item]).as_null_object}
       let(:recurring_order){double(Spree::RecurringOrder, id: 1, number: '1234', base_list: base_list)}
 
       before :each do
@@ -49,6 +49,12 @@ describe Spree::Admin::RecurringListOrdersController do
       it 'should set email and created by' do
         expect(new_order).to receive(:email=).with('test@email.com')
         expect(new_order).to receive(:created_by=).with(normal_user)
+
+        spree_post :create, recurring_order_id: recurring_order.id 
+      end
+
+      it 'should update next_delivery_date for recurring order' do
+        expect(base_list).to receive(:update_next_delivery_date!)
 
         spree_post :create, recurring_order_id: recurring_order.id 
       end

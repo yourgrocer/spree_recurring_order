@@ -27,6 +27,7 @@ module Spree
             base_list.items.each do |item|
               order_contents.add(item.variant, item.quantity)
             end
+            base_list.update_next_delivery_date!
 
             redirect_to(edit_admin_order_url(@order.number))
           else

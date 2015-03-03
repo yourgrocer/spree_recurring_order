@@ -18,6 +18,10 @@ module Spree
       recurring_list.items = order.line_items.map{|line_item| Spree::RecurringListItem.from_line_item(line_item)}
       recurring_list
     end
+    
+    def update_next_delivery_date!
+      update_attributes(next_delivery_date: next_delivery_date + 7.days)
+    end
 
     def remove_item(item_params)
       item = items.where(item_params).first

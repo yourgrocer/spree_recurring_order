@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Spree::RecurringOrder do
 
+
   describe 'create from order' do
 
     it 'should create from original order' do
