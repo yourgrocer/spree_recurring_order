@@ -2,6 +2,16 @@ require 'spec_helper'
 
 describe Spree::RecurringOrder do
 
+  describe 'update next delivery date' do
+
+    it 'should move next delivery date to 7 days later if existing' do
+      list = FactoryGirl.create(:recurring_list, next_delivery_date: Date.today)
+      list.update_next_delivery_date!
+      expect(list.reload.next_delivery_date).to eq(Date.today + 7.days)
+    end
+
+  end
+
   describe 'validation' do
 
     it 'should require a user' do
