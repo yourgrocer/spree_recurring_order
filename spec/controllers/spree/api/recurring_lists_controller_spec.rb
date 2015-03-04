@@ -5,7 +5,11 @@ describe Spree::Api::RecurringListsController do
   let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
 
   before :each do
-    controller.stub :spree_current_user => user
+    stub_authentication!
+  end
+
+  def current_api_user
+    user
   end
 
   describe 'integration' do
@@ -14,7 +18,7 @@ describe Spree::Api::RecurringListsController do
       variant = FactoryGirl.create(:variant)
       list = FactoryGirl.create(:recurring_list)
 
-      api_put :update, id: list.id, recurring_list_item: {variant_id: variant.id, quantity: 3}
+      api_put :update, id: list.id, recurring_list_item: {variant_id: variant.id, quantity: 3}, token: 'fake'
 
       expect(response.status).to eq(200)
       expect(list.reload.items.map{|item| item.variant_id}).to include(variant.id)
