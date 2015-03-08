@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Spree::Api::RecurringListsController do
 
-  let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake' }
+  let(:roles) {mock_model 'Roles', pluck: []}
+  let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake', :spree_roles => roles}
 
   before :each do
     stub_authentication!
