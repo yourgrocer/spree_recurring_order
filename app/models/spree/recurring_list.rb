@@ -10,6 +10,8 @@ module Spree
     validates :timeslot, presence: true
     validate :items_present
 
+    after_create :generate_api_key_if_not_present
+
     def self.build_from_order(order)
       recurring_list = Spree::RecurringList.new
       recurring_list.user_id = order.user.id
@@ -41,6 +43,10 @@ module Spree
     end
 
     private
+
+    def generate_api_key_if_not_present
+      user.generate_spree_api_key! if user.spree_api_key.nil?
+    end
 
     def items_present
       if items.empty?
