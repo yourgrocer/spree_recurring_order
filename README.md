@@ -1,6 +1,7 @@
 Spree Recurring Order
 =====================
 
+
 Before you invest time in trying to use this gem, here are some caveats:
 
 - It does not process recurring payments
