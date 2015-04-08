@@ -7,9 +7,10 @@ function RegularOrderForm() {
       var listId = ids[0];
       var itemId = ids[1];
 
-      $.ajax({
-        url: 'api/recurring_lists/' + itemId,
+      Spree.ajax({
+        url: 'api/recurring_lists/' + listId,
         type: 'PUT',
+        headers: {'X-Spree-Token': Spree.api_key},
         data: {recurring_list_item: {id: itemId, destroy: true}},
         complete: function(result){
           window.location.reload(true);
