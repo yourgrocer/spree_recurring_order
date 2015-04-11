@@ -25,7 +25,7 @@ module Spree
             @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
             order_contents = Spree::OrderContents.new(@order)
             base_list.items.each do |item|
-              order_contents.add(item.variant, item.quantity)
+              order_contents.add(item.variant, item.quantity, quick_add: true)
             end
             base_list.update_next_delivery_date!
 

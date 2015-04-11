@@ -61,7 +61,7 @@ describe Spree::Admin::RecurringListOrdersController do
 
       it 'should add items from base list' do
         expect(Spree::OrderContents).to receive(:new).with(new_order).and_return(order_contents)
-        expect(order_contents).to receive(:add).with(item.variant, item.quantity)
+        expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
 
         spree_post :create, recurring_order_id: recurring_order.id 
       end
