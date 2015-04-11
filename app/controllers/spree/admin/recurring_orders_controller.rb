@@ -1,6 +1,6 @@
 module Spree
   module Admin
-    class RecurringOrdersController < Spree::Admin::BaseController
+    class RecurringOrdersController < ResourceController 
 
       def index
         @recurring_orders = Spree::RecurringOrder.all.select{|order| !order.original_order.nil? }
