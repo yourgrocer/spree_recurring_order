@@ -34,7 +34,7 @@ describe Spree::Admin::RecurringListsController do
       allow(Spree::RecurringList).to receive(:find).with("1").and_return(base_list)
       allow(base_list).to receive(:update_attributes)
       spree_put :update, id: 1, recurring_list: {next_delivery_date: 10.days.from_now, timeslot: '4pm to 5:30pm'}
-      expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.id}")
+      expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
     end
 
 
