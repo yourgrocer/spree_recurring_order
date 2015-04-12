@@ -29,15 +29,25 @@ module Spree
             end
             base_list.update_next_delivery_date!
 
+            move_order_to_payment_state(@order)
             redirect_to(edit_admin_order_url(@order.number))
           else
-            fail_with_message('New order validation failed')
+            fail_with_message("#{@order.errors.full_messages.first}")
           end
 
         end
       end
 
       private
+
+      def move_order_to_payment_state(order)
+        counter = 0
+        while order.state != 'payment'
+          order.next
+          counter = counter + 1
+          break if counter > 3
+        end
+      end
 
       def fail_with_message(message)
         flash[:error] = "Order creation failed - #{message}" 
