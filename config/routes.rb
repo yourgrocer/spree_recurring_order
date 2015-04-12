@@ -16,7 +16,7 @@ Spree::Core::Engine.routes.draw do
 
   namespace :admin do
     resources :recurring_lists, only: [:update]
-    resources :recurring_orders, only: [:index, :destroy] do
+    resources :recurring_orders, only: [:index, :destroy, :update] do
       resources :recurring_list_orders, only: [:create]
     end
   end

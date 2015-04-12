@@ -1,5 +1,9 @@
 <% content_for :page_actions do %>
-  <li><%= link_to_delete @recurring_order, url: admin_recurring_order_url(@recurring_order) %></li>
+  <% if @recurring_order.active? %>
+    <li><%= button_link_to("Pause", admin_recurring_order_url(number: @recurring_order.number, active: false), {:method => :put, :icon => 'pause'}) %></li>
+  <% else %>
+    <li><%= button_link_to("Activate", admin_recurring_order_url(number: @recurring_order.number, active: true), {:method => :put, :icon => 'play'}) %></li>
+  <% end %>
 <% end %>
 
 <% content_for :page_title do %>

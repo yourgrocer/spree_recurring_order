@@ -10,8 +10,9 @@
         <col style="width: 20%;">
         <col style="width: 20%;">
         <col style="width: 17%;">
-        <col style="width: 20%;">
-        <col style="width: 20%;">
+        <col style="width: 15%;">
+        <col style="width: 15%;">
+        <col style="width: 10%;">
         <col style="width: 3%;">
       </colgroup>
       <thead>
@@ -21,6 +22,7 @@
           <th><%= Spree.t(:number_of_orders, resource: I18n.t(:other, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
           <th><%= Spree.t(:created_at, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
           <th><%= Spree.t(:next_delivery_date, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
+          <th><%= Spree.t(:active, resource: I18n.t(:created_at, :scope => 'activerecord.attributes.spree/recurring_order')) %></th>
           <th></th>
         </tr>
       </thead>
@@ -32,6 +34,7 @@
             <td class="align-center"><%= order.orders.count %></td>
             <td class="align-center"><%= l (order.created_at).to_date %></td>
             <td class="align-center"><%= l (order.base_list.next_delivery_date).to_date %></td>
+            <td class="align-center"><%= order.active? ? "YES" : "NO" %></td>
             <td class="actions"><%= link_to_delete order, url: admin_recurring_order_url(order.id), no_text: true %></td>
           </tr>
         <% end %>
