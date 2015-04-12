@@ -10,60 +10,20 @@ module Spree
         elsif order_to_merge && order_to_merge.delivery_date
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
-          @order = Spree::Order.new
-          @order.recurring_order = @recurring_order
-          @order.email = base_list.user.email
-          @order.created_by = base_list.user
-          @order.user = base_list.user
-
-          @order.ship_address = ship_address(base_list) 
-          @order.bill_address = bill_address(base_list) 
-
-          set_extended_values
-
-          if @order.save
-            @order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @order)
-            order_contents = Spree::OrderContents.new(@order)
-            base_list.items.each do |item|
-              order_contents.add(item.variant, item.quantity, quick_add: true)
-            end
-            base_list.update_next_delivery_date!
-
-            move_order_to_payment_state(@order)
-            redirect_to(edit_admin_order_url(@order.number))
+          new_order = @recurring_order.create_order_from_base_list(order_to_merge)
+          if new_order.valid?
+            redirect_to(edit_admin_order_url(new_order.number))
           else
-            fail_with_message("#{@order.errors.full_messages.first}")
+            fail_with_message("#{new_order.errors.full_messages.first}")
           end
-
         end
       end
 
       private
 
-      def move_order_to_payment_state(order)
-        counter = 0
-        while order.state != 'payment'
-          order.next
-          counter = counter + 1
-          break if counter > 3
-        end
-      end
-
       def fail_with_message(message)
         flash[:error] = "Order creation failed - #{message}" 
         redirect_to(admin_recurring_order_url(@recurring_order.number))
-      end
-
-      def set_extended_values
-        #To be overriden
-      end
-
-      def ship_address(base_list) 
-        base_list.user.orders.complete.last.ship_address.dup
-      end
-
-      def bill_address(base_list) 
-        base_list.user.orders.complete.last.bill_address.dup
       end
 
       def base_list

@@ -46,27 +46,8 @@ describe Spree::Admin::RecurringListOrdersController do
         allow(order_contents).to receive(:add)
       end
 
-      it 'should set email and created by' do
-        expect(new_order).to receive(:email=).with('test@email.com')
-        expect(new_order).to receive(:created_by=).with(normal_user)
-
-        spree_post :create, recurring_order_id: recurring_order.id 
-      end
-
-      it 'should update next_delivery_date for recurring order' do
-        expect(base_list).to receive(:update_next_delivery_date!)
-
-        spree_post :create, recurring_order_id: recurring_order.id 
-      end
-
-      it 'should add items from base list' do
-        expect(Spree::OrderContents).to receive(:new).with(new_order).and_return(order_contents)
-        expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
-
-        spree_post :create, recurring_order_id: recurring_order.id 
-      end
-
       it 'should redirect to new order path' do
+        allow(recurring_order).to receive(:create_order_from_base_list).and_return(new_order)
         spree_post :create, recurring_order_id: recurring_order.id 
         expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
       end
@@ -77,16 +58,6 @@ describe Spree::Admin::RecurringListOrdersController do
 
         spree_post :create, recurring_order_id: recurring_order.id 
         expect(response).to redirect_to("/admin/recurring_orders/#{invalid_recurring_order.number}")
-      end
-
-      it 'should merge with cart order if user has one' do
-        incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: nil).as_null_object
-        allow(normal_user).to receive(:last_incomplete_spree_order).and_return(incomplete_order)
-
-        expect(new_order).to receive(:merge!).with(incomplete_order)
-        spree_post :create, recurring_order_id: recurring_order.id
-
-        expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
       end
 
       it 'should fail if user has already an order with a delivery date' do
@@ -100,7 +71,8 @@ describe Spree::Admin::RecurringListOrdersController do
       end
 
       it 'should fail if order validation fails' do
-        allow(new_order).to receive(:save).and_return false
+        allow(new_order).to receive(:valid?).and_return false
+        allow(recurring_order).to receive(:create_order_from_base_list).and_return(new_order)
         spree_post :create, recurring_order_id: recurring_order.id
         expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
       end

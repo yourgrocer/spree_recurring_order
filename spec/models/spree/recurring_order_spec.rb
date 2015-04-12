@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Spree::RecurringOrder do
 
-
   describe 'active' do
 
     it 'should be active by default' do
@@ -10,6 +9,56 @@ describe Spree::RecurringOrder do
       expect(recurring_order.active).to be_truthy
     end
 
+  end
+
+  describe 'create order from base list' do
+
+    let(:new_order){double(Spree::Order).as_null_object}
+    let(:normal_user){FactoryGirl.create(:user, email: 'test@email.com')}
+    let(:order_contents){double(Spree::OrderContents).as_null_object}
+    let(:item){FactoryGirl.build(:recurring_list_item)}
+    let(:base_list){Spree::RecurringList.new}
+    let(:recurring_order){Spree::RecurringOrder.new}
+
+    before :each do
+      address = FactoryGirl.create(:address)
+      old_order = FactoryGirl.create(:order, user: normal_user, state: 'complete', completed_at: Time.now, ship_address: address, bill_address: address)
+      normal_user.orders << old_order
+
+      allow(Spree::Order).to receive(:new).and_return(new_order)
+      allow(Spree::OrderContents).to receive(:new).and_return(order_contents)
+
+      @recurring_order = Spree::RecurringOrder.new
+      @base_list = Spree::RecurringList.new(next_delivery_date: Date.tomorrow)
+      @base_list.user = normal_user
+      @base_list.items << item
+      @recurring_order.recurring_lists << @base_list
+    end
+
+    it 'should set email and created by' do
+      expect(new_order).to receive(:email=).with('test@email.com')
+      expect(new_order).to receive(:created_by=).with(normal_user)
+
+      @recurring_order.create_order_from_base_list
+    end
+
+    it 'should merge with cart order if user has one' do
+      incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: nil).as_null_object
+      expect(new_order).to receive(:merge!).with(incomplete_order)
+
+      @recurring_order.create_order_from_base_list(incomplete_order)
+    end
+
+
+    it 'should update next_delivery_date for recurring order' do
+      expect(@base_list).to receive(:update_next_delivery_date!)
+      @recurring_order.create_order_from_base_list
+    end
+
+    it 'should add items from base list' do
+      expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
+      @recurring_order.create_order_from_base_list
+    end
   end
 
   describe 'create from order' do
