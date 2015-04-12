@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Spree::RecurringOrder do
 
 
+  describe 'active' do
+
+    it 'should be active by default' do
+      recurring_order = Spree::RecurringOrder.new
+      expect(recurring_order.active).to be_truthy
+    end
+
+  end
+
   describe 'create from order' do
 
     it 'should create from original order' do
