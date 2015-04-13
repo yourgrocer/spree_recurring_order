@@ -31,9 +31,9 @@ describe Spree::Admin::RecurringListOrdersController do
 
     context 'mocks' do
 
-      let(:new_order){double(Spree::Order, id: 123, number: 'A123', delivery_date: nil).as_null_object}
+      let(:new_order){double(Spree::Order, id: 123, number: 'A123', delivery_date: nil, valid?: true).as_null_object}
       let(:order_contents){double(Spree::OrderContents).as_null_object}
-      let(:normal_user){double(Spree::User, email: 'test@email.com', last_incomplete_spree_order: nil).as_null_object}
+      let(:normal_user){double(Spree::User, email: 'test@email.com', has_incomplete_order_booked?: false).as_null_object}
       let(:item){FactoryGirl.build(:recurring_list_item)}
       let(:base_list){double(Spree::RecurringList, user: normal_user, items: [item]).as_null_object}
       let(:recurring_order){double(Spree::RecurringOrder, id: 1, number: '1234', base_list: base_list)}

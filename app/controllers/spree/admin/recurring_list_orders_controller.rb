@@ -10,7 +10,7 @@ module Spree
         elsif base_list.user.has_incomplete_order_booked?
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
-          new_order = @recurring_order.create_order_from_base_list(order_to_merge)
+          new_order = @recurring_order.create_order_from_base_list
           if new_order.valid?
             redirect_to(edit_admin_order_url(new_order.number))
           else

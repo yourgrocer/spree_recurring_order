@@ -44,9 +44,10 @@ describe Spree::RecurringOrder do
 
     it 'should merge with cart order if user has one' do
       incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: nil).as_null_object
+      allow(normal_user).to receive(:last_incomplete_spree_order).and_return incomplete_order
       expect(new_order).to receive(:merge!).with(incomplete_order)
 
-      @recurring_order.create_order_from_base_list(incomplete_order)
+      @recurring_order.create_order_from_base_list
     end
 
 
