@@ -8,10 +8,12 @@ describe Spree::RecurringOrderService do
     let(:userA){double(Spree::Order, has_incomplete_order_booked?: false).as_null_object}
     let(:orderA){double(Spree::Order, user: userA).as_null_object}
     let(:orderB){double(Spree::Order, user: userA).as_null_object}
+    let(:mail){double(Object).as_null_object}
 
     before :each do
       allow(orderA).to receive(:base_list).and_return base_list
       allow(orderB).to receive(:base_list).and_return base_list
+      allow(Spree::OrderMailer).to receive(:recurring_orders_processing_email).and_return mail
     end
 
     it 'should create all orders for delivery in two days from now' do
@@ -61,7 +63,25 @@ describe Spree::RecurringOrderService do
       service = Spree::RecurringOrderService.new(Date.today)
       service.create_orders
     end
-    it 'should send email with results'
+
+    it 'should store outcomes' do
+      allow(Spree::RecurringOrder).to receive(:where).and_return([orderA, orderB])
+      allow(orderA).to receive(:create_order_from_base_list).and_raise(RuntimeError)
+
+      expect(Spree::RecurringOrderProcessingOutcome).to receive(:new).with(orderA, instance_of(RuntimeError))
+      expect(Spree::RecurringOrderProcessingOutcome).to receive(:new).with(orderB, nil)
+
+      service = Spree::RecurringOrderService.new(Date.today)
+      service.create_orders
+    end
+
+    it 'should send email with results' do
+      allow(Spree::RecurringOrder).to receive(:where).and_return([orderA, orderB])
+      expect(Spree::OrderMailer).to receive(:recurring_orders_processing_email)
+
+      service = Spree::RecurringOrderService.new(Date.today)
+      service.create_orders
+    end
 
   end
 

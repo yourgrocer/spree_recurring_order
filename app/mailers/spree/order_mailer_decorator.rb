@@ -4,4 +4,8 @@ Spree::OrderMailer.class_eval do
     #do nothing - this should be overriden
   end
 
+  def recurring_orders_processing_email(results)
+
+  end
+
 end
