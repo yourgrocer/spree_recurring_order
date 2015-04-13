@@ -7,7 +7,7 @@ module Spree
 
         if base_list.nil?
           fail_with_message('Recurring order does not have a base list')
-        elsif order_to_merge && order_to_merge.delivery_date
+        elsif base_list.user.has_incomplete_order_booked?
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
           new_order = @recurring_order.create_order_from_base_list(order_to_merge)
@@ -28,11 +28,6 @@ module Spree
 
       def base_list
         @recurring_order.base_list
-      end
-
-      def order_to_merge
-        @order_to_merge ||= base_list.nil? ? nil : base_list.user.last_incomplete_spree_order
-        @order_to_merge
       end
 
     end
