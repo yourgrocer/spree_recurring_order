@@ -13,6 +13,7 @@ module Spree
         exception = nil
         new_order = nil
         begin
+          raise Spree::RecurringOrderProcessingError.new("Order is paused") unless recurring_order.active?
           raise Spree::RecurringOrderProcessingError.new("Order doesn't have a base list") unless recurring_order.base_list
           raise Spree::RecurringOrderProcessingError.new("User has another booked incomplete order") if recurring_order.user.has_incomplete_order_booked?
           new_order = recurring_order.create_order_from_base_list
