@@ -62,7 +62,7 @@ describe Spree::Admin::RecurringListOrdersController do
 
       it 'should fail if user has already an order with a delivery date' do
         incomplete_order = double(Spree::Order, id: 1234, number: 'A1234', delivery_date: Date.tomorrow).as_null_object
-        allow(normal_user).to receive(:last_incomplete_spree_order).and_return(incomplete_order)
+        allow(normal_user).to receive(:has_incomplete_order_booked?).and_return(true)
 
         expect(Spree::Order).not_to receive(:create)
         spree_post :create, recurring_order_id: recurring_order.id

@@ -7,13 +7,13 @@ module Spree
 
     def create_orders
       orders = Spree::RecurringOrder.where(next_delivery_date: @date + 2.days)
-      orders = orders.reject{|order| order.base_list.nil?}
-      orders = orders.reject{|order| order.user.has_incomplete_order_booked? }
 
       results = []
       orders.each do |order|
         exception = nil
         begin
+          raise RecurringOrderProcessingError.new("Order doesn't have a base list") unless order.base_list
+          raise RecurringOrderProcessingError.new("User has another booked incomplete order") if order.user.has_incomplete_order_booked?
           order.create_order_from_base_list
         rescue => e
           exception = e
@@ -22,7 +22,7 @@ module Spree
         end
       end
   
-      Spree::OrderMailer.recurring_orders_processing_email(results).deliver!
+      Spree::OrderMailer.recurring_orders_processing_email(results, @date).deliver!
     end
 
   end
