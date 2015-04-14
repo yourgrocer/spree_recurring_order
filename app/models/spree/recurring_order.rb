@@ -43,6 +43,10 @@ module Spree
       new_order
     end
 
+    def user
+      @user ||= recurring_lists.empty? ? nil : recurring_lists.first.user
+    end
+
     def base_list
       @base_list ||= recurring_lists.sort_by{|list| list.created_at}.first
     end

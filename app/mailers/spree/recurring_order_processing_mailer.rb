@@ -1,10 +1,10 @@
 module Spree
-  class RecurringOrderProcessingMailer < MandrillMailer::MessageMailer
+  class RecurringOrderProcessingMailer < ::MandrillMailer::MessageMailer
     def render_template(view_path, data = {})
-      ::ViewRenderer.render template: "views/#{view_path}", assigns: data
+      ::ViewRenderer.render template: "#{view_path}", assigns: data
     end
 
-    def recurring_orders_processing_email(results, date)
+    def results_email(results, date)
       view_data = {results: results, date: date } 
       mandrill_mail subject: "Recurring orders processing report for #{date.strftime('%B %d, %Y')}",
         to: 'francisco@yourgrocer.com.au', 

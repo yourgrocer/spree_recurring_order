@@ -11,7 +11,7 @@
   %tbody
     - @results.select{|result| result.success == false}.each do |result|
       %tr
-        %td{width: '15%', style: 'text-align:center;font-size:12px;'}= result.order_number
+        %td{width: '15%', style: 'text-align:center;font-size:12px;'}= result.recurring_order_number
         %td{width: '25%', style: 'text-align:center;font-size:12px;'}= result.email
         %td{width: '60%', style: 'text-align:center;font-size:12px;'}= result.message
 %p
@@ -26,6 +26,6 @@
   %tbody
     - @results.select{|result| result.success == false}.each do |result|
       %tr
-        %td{width: '15%', style: 'text-align:center;font-size:12px;'}= result.order_number
+        %td{width: '15%', style: 'text-align:center;font-size:12px;'}= result.recurring_order_number
         %td{width: '25%', style: 'text-align:center;font-size:12px;'}= result.email
         %td{width: '60%', style: 'text-align:center;font-size:12px;'}= result.message

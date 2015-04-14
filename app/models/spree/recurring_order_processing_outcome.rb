@@ -1,17 +1,22 @@
 module Spree
   class RecurringOrderProcessingOutcome
 
-    def initialize(order, exception=nil)
-      @order = order
+    def initialize(recurring_order, new_order, exception=nil)
+      @recurring_order = recurring_order
       @exception = exception
+      @new_order = new_order
+    end
+
+    def recurring_order_number
+      @recurring_order.number
     end
 
     def order_number
-      @order.number
+      @new_order.nil? ? nil : @new_order.number
     end
 
     def email
-      @order.email
+      @recurring_order.email
     end
 
     def success
