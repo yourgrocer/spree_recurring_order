@@ -8,7 +8,10 @@ module Spree
 
       def index
         @recurring_orders = Spree::RecurringOrder.all.select{|order| !order.original_order.nil? }
-        @recurring_orders_with_lists = Spree::RecurringOrder.all.select{|order| !order.recurring_lists.empty? }
+        @recurring_orders_with_lists = Spree::RecurringOrder.all
+          .select{|order| !order.recurring_lists.empty? }
+          .sort_by!{|order| order.base_list.next_delivery_date}
+          .reverse
       end
 
       def show
