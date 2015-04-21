@@ -7,7 +7,7 @@ module Spree
       skip_before_action :load_resource, only: [:update]
 
       def index
-        @recurring_orders = Spree::RecurringOrder.all.select{|order| !order.original_order.nil? }
+        @recurring_orders = Spree::RecurringOrder.all.select{|order| !order.original_order.nil? && order.base_list.nil? }
         @recurring_orders_with_lists = Spree::RecurringOrder.all
           .select{|order| !order.recurring_lists.empty? }
           .sort_by!{|order| order.base_list.next_delivery_date}
