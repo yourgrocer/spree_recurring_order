@@ -16,6 +16,10 @@ module Spree
     def update
       @recurring_list = Spree::RecurringList.find(params[:id])
       @recurring_list.update_attributes({id: params[:id]}.merge(list_params))
+      
+      list_params[:items_attributes].each do |item_attributes|
+        @recurring_list.remove_item(item_attributes) if item_attributes[:quantity].to_i == 0
+      end
       redirect_to account_url
     end
 

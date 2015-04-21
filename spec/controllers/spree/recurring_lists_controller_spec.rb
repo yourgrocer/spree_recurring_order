@@ -91,4 +91,26 @@ describe Spree::RecurringListsController do
 
   end
 
+  describe 'update' do
+    let(:list_item) { double Spree::RecurringListItem }
+    let(:list_items) { double "MyArray" }
+    let(:list) { double(Spree::RecurringList, items: list_items) }
+
+    before :each do
+      allow(Spree::RecurringList).to receive(:find).and_return(list)
+      allow(list).to receive(:update_attributes)
+      allow(list).to receive(:remove_item)
+    end
+
+    it 'should call item_remove on items with 0 quantity' do
+      expect(list).to receive(:remove_item)
+      spree_post :update, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"0", "id"=>"475", "selected" => "1"}}}
+    end
+
+    it 'should not call item_remove on items with quantity > 0 ' do
+      expect(list).not_to receive(:remove_item)
+      spree_post :update, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"1", "id"=>"475", "selected" => "1"}}}
+    end
+  end
+
 end
