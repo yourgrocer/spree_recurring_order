@@ -1,0 +1,8 @@
+.row
+  = form_for(@recurring_list) do |f|
+    .columns.sixteen.alpha.omega
+      - next_week = @recurring_list.next_delivery_date + 1.week
+      = f.hidden_field :next_delivery_date, value: next_week
+    .form-buttons.filter-actions-actions
+      %button{data: {confirm: "This will move your next delivery to #{next_week.strftime("%d/%m/%Y")}. Are you sure?" }}
+        = Spree.t('Skip a week')
