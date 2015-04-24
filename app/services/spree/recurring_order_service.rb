@@ -6,10 +6,11 @@ module Spree
     end
 
     def create_orders
-      orders = Spree::RecurringOrder.joins(:recurring_lists).where(spree_recurring_lists: {next_delivery_date: @date + 2.days})
+      orders = Spree::RecurringOrder.joins(:recurring_lists).where(spree_recurring_lists: {next_delivery_date: @date + 3.days})
 
       results = []
       orders.each do |recurring_order|
+        puts "processing #{recurring_order.number}"
         exception = nil
         new_order = nil
         begin
@@ -26,7 +27,7 @@ module Spree
         end
       end
  
-      Spree::RecurringOrderProcessingMailer.results_email(results, @date)
+      Spree::RecurringOrderProcessingMailer.results_email(results, @date).deliver
     end
 
   end

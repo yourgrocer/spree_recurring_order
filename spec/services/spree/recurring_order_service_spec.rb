@@ -41,7 +41,7 @@ describe Spree::RecurringOrderService do
     end
 
     it 'should not create orders for other dates' do
-      allow(join_statement).to receive(:where).with(spree_recurring_lists: {next_delivery_date: Date.today + 2.days}).and_return([])
+      allow(join_statement).to receive(:where).with(spree_recurring_lists: {next_delivery_date: Date.today + 3.days}).and_return([])
 
       service = Spree::RecurringOrderService.new(Date.today)
       service.create_orders
