@@ -1,0 +1,7 @@
+.row.pause-recurring-order
+  = form_for(@recurring_list.recurring_order, remote: true) do |f|
+    .columns.sixteen.alpha.omega
+      = f.hidden_field :active, value: false
+    .form-buttons.filter-actions-actions
+      %button{data: {confirm: "Are you sure you want to pause this order?" }}
+        = Spree.t('Pause')

@@ -1,0 +1,7 @@
+.row.activate-recurring-order
+  = form_for(@recurring_list.recurring_order, remote: true) do |f|
+    .columns.sixteen.alpha.omega
+      = f.hidden_field :active, value: true
+    .form-buttons.filter-actions-actions
+      %button{data: {confirm: "Are you sure you want to activate this order?" }}
+        = Spree.t('Activate')

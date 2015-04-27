@@ -19,6 +19,12 @@ module Spree
       end
     end
 
+    def update
+      @recurring_order = Spree::RecurringOrder.find(params[:id])
+      @recurring_order.update_attributes(update_params)
+      render :nothing => true, :status => 200, :content_type => 'text/html'
+    end
+
     def show
       @recurring_order = Spree::RecurringOrder.find(params[:id])
     end
@@ -27,6 +33,10 @@ module Spree
 
     def recurring_order_params
       params[:recurring_order].permit(:original_order_id)
+    end
+
+    def update_params
+      params[:recurring_order].permit(:active)
     end
 
   end
