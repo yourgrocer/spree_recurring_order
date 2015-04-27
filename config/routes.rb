@@ -16,7 +16,9 @@ Spree::Core::Engine.routes.draw do
   post "admin/recurring_emails/:number", controller: 'admin/recurring_emails', action: 'create', as: 'admin_recurring_email'
 
   namespace :admin do
-    resources :recurring_lists, only: [:update]
+    resources :recurring_lists, only: [:update] do
+      resources :items, :controller => 'recurring_lists/items', only: [:create, :destroy]
+    end
     resources :recurring_orders, only: [:index, :destroy, :update] do
       resources :recurring_list_orders, only: [:create]
     end
