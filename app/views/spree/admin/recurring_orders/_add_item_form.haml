@@ -1,0 +1,9 @@
+.row.pause-recurring-order
+  = form_tag(admin_recurring_list_items_url(@recurring_order.base_list.id), method: :post) do
+    .columns.sixteen.alpha.omega
+      %label SKU:
+      = text_field_tag :sku, '', {id: 'vac'}
+      %label Quantity:
+      = number_field_tag :quantity, 1, min: 1
+      %button
+        = Spree.t('Add Item')
