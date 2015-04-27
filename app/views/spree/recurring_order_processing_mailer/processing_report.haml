@@ -24,7 +24,7 @@
       %th{style: 'border-bottom: 1px solid black;font-size:12px;'}Email
       %th{style: 'border-bottom: 1px solid black;font-size:12px;'}Reason
   %tbody
-    - @results.select{|result| result.success == false}.each do |result|
+    - @results.select{|result| result.success == true}.each do |result|
       %tr
         %td{width: '15%', style: 'text-align:center;font-size:12px;'}= result.recurring_order_number
         %td{width: '25%', style: 'text-align:center;font-size:12px;'}= result.email

@@ -7,7 +7,7 @@ module Spree
     def results_email(results, date)
       view_data = {results: results, date: date } 
       mandrill_mail subject: "Recurring orders processing report for #{date.strftime('%B %d, %Y')}",
-        to: 'francisco@yourgrocer.com.au', 
+        to: 'hello@yourgrocer.com.au', 
         template_name: 'recurring_orders_report',
         from: 'hello@yourgrocer.com.au',
         from_name: 'YourGrocer Website',
