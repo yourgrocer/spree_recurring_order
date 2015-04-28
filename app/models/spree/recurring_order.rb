@@ -92,6 +92,12 @@ module Spree
     def has_incomplete_order_on?(date)
       orders.where(delivery_date: date).select{|o| o.state != 'complete'}.length > 0
     end
+    
+    def for(period)
+      return for_tomorrow? && in_morning? if period == :tomorrow_morning
+      return for_today && in_morning? if period == :today_morning
+      return for_today && in_evening? if period == :today_evening
+    end
 
     private
 
