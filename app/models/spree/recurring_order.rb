@@ -71,6 +71,19 @@ module Spree
       original_order.ship_address.phone rescue 'N/A'
     end
 
+    def create_and_complete(payment_method)
+      # Spree::PaymentMethod.find_by(name: "Admin - Offline Payment")
+      new_order = create_order_from_base_list
+
+      if new_order
+        new_order.payments.create!(payment_method: payment_method, amount: new_order.total)
+        new_order.payment_state = 'paid'
+        new_order.next!
+      end
+
+      new_order
+    end
+
     private
 
     def order_to_merge
