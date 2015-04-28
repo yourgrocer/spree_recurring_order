@@ -71,6 +71,24 @@ module Spree
       original_order.ship_address.phone rescue 'N/A'
     end
 
+    def in_evening?
+      # 13:15 is actually ::SpreeDeliveryOptions::Config.morning_cut_off_time
+      # but it wouldn't make sense to spree_recurring_order to depend on spree_delivery_options (tight coupling)
+      Spree::RecurringOrder::DeliveryTime.new(timeslot, '13:15').afternoon?
+    end
+
+    def in_morning?
+      Spree::RecurringOrder::DeliveryTime.new(timeslot, '13:15').morning?
+    end
+
+    def for_today?
+      next_delivery_date == Date.today
+    end
+
+    def for_tomorrow?
+      next_delivery_date == Date.tomorrow
+    end
+
     def create_and_complete(payment_method)
       # Spree::PaymentMethod.find_by(name: "Admin - Offline Payment")
       new_order = create_order_from_base_list
