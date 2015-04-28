@@ -89,6 +89,10 @@ module Spree
       next_delivery_date == Date.tomorrow
     end
 
+    def has_incomplete_order_on?(date)
+      orders.where(delivery_date: date).select{|o| o.state != 'complete'}.length > 0
+    end
+
     def create_and_complete(payment_method)
       # Spree::PaymentMethod.find_by(name: "Admin - Offline Payment")
       new_order = create_order_from_base_list
