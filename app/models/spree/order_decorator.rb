@@ -12,4 +12,10 @@ Spree::Order.class_eval do
     end
   end
 
+  def complete(payment_method)
+    self.payments.create!(payment_method: payment_method, amount: self.total)
+    self.payment_state = 'paid'
+    self.next!
+  end
+
 end
