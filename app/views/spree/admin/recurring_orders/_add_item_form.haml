@@ -1,0 +1,36 @@
+#add_item_form.row.pause-recurring-order
+  = form_tag(admin_recurring_list_items_url(@recurring_order.base_list.id), method: :post) do
+    .columns.four.alpha.omega
+      = text_field_tag :variant_id, '', {class: 'variant_autocomplete'}
+    .columns.four.alpha.omega
+      %label Quantity:
+      = number_field_tag :quantity, 1, min: 1
+    .columns.four.alpha.omega
+      %button
+        = Spree.t('Add Item')
+
+%script#variant_autocomplete_template{:type => "text/template"}
+  :plain
+    <div class='variant-autocomplete-item'>
+    <figure class='variant-image'>
+    {{#if variant.image }}
+    <img src='{{variant.image}}' />
+    {{ else }}
+    <img src='#{image_path("noimage/mini.png")}' />
+    {{/if}}
+    </figure>
+
+    <div class='variant-details'>
+
+    <h6 class="variant-name">{{variant.name}}</h6>
+
+    {{#if variant.option_values}}
+    {{#each variant.option_values}}
+    <strong>{{this.option_type_presentation}}:</strong> {{this.presentation}}<br>
+    {{/each}}
+    {{/if}}
+
+    <strong>#{Spree.t(:sku)}:</strong> {{variant.sku}}
+
+    </div>
+    </div>

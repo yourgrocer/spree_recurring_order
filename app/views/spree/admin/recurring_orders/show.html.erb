@@ -44,6 +44,9 @@
 <% end %>
 
 <% if @recurring_order.base_list %>
+  <fieldset class="no-border-bottom">
+    <%= render partial: "add_item_form" %>
+  </fieldset>
   <fieldset class='no-border-bottom'>
     <legend>Recurring List</legend>
     <table>
@@ -51,6 +54,7 @@
         <th><%= Spree.t('quantity')%></th> 
         <th><%= Spree.t('name')%></th>
         <th><%= Spree.t('sku')%></th>
+        <th><%= Spree.t('delete')%></th>
       </thead>
       <tbody class="with-border">
         <% @recurring_order.base_list.items.each do |item| %>
@@ -58,6 +62,7 @@
             <td class="align-center"><span><%= item.quantity %></span></td>
             <td class="align-center"><span><%= item.variant.name %></span></td>
             <td class="align-center"><span><%= item.variant.sku %></span></td>
+            <td class="align-center actions"><span><%= link_to_delete item, url: admin_recurring_list_item_url(@recurring_order.base_list,item.id), no_text: true %></span></td>
           </tr>
         <% end %>
       </tbody>
