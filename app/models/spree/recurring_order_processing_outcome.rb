@@ -25,7 +25,7 @@ module Spree
 
     def message
       if @exception.nil? 
-        "Created for delivery on #{@order.delivery_date.strftime("%d/%m/%Y")} from #{@order.delivery_time}"
+        "Created for delivery on #{@new_order.delivery_date.strftime("%d/%m/%Y")} from #{@new_order.delivery_time}"
       else
         "Processing failed - #{@exception.message}"
       end
