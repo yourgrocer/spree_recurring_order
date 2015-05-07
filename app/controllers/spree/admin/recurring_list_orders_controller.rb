@@ -9,11 +9,15 @@ module Spree
         elsif base_list.user.has_incomplete_order_booked?
           fail_with_message('User has already an existing incomplete order with delivery date set')
         else
+          @recurring_order.complete_after_create = params[:complete_after_create] == "1" ? true : false
+          @recurring_order.save
           new_order = @recurring_order.create_order_from_base_list
           if new_order.valid?
-            if params[:complete_after_create] == "1"
+            if @recurring_order.complete_after_create
               new_order.auto_complete
               flash[:warning] = 'Order created but auto completing it failed' unless new_order.complete?
+            else
+              @recurring_order.complete_after_create = false
             end
             redirect_to(edit_admin_order_url(new_order.number))
           else
