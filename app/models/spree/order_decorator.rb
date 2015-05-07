@@ -6,6 +6,10 @@ Spree::Order.class_eval do
     !recurring_order.nil?
   end
 
+  def auto_complete
+    #do nothing - this should be overriden
+  end
+
   def deliver_recurring_order_email
     if self.recurring?
       Spree::OrderMailer.recurring_email(self.id).deliver
