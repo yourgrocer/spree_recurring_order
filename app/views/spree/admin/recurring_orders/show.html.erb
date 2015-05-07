@@ -70,6 +70,8 @@
 
     <%= form_tag(admin_recurring_order_recurring_list_orders_path(@recurring_order), method: :post) do -%>
       <%= submit_tag "Create Order" -%>
+      <label for="cb_auto_complete_order">and complete </label>
+      <%= check_box_tag "complete_after_create", @recurring_order.complete_after_create ? "0" : "1", @recurring_order.complete_after_create  -%>
     <% end %>
   </fieldset>
 <% end %>
@@ -81,6 +83,7 @@
       <th><%= Spree.t('number')%></th> 
       <th><%= Spree.t('created_date')%></th>
       <th><%= Spree.t('delivery_date')%></th>
+      <th><%= Spree.t('state')%></th>
     </thead>
     <tbody class="with-border">
       <% @recurring_order.orders.each do |order| %>
@@ -88,6 +91,7 @@
           <td class="align-center"><strong><%= link_to order.number, edit_admin_order_path(order) %></strong></td>
           <td class="align-center"><span><%= l (order.created_at).to_date %></span></td>
           <td class="align-center"><span><%= l (order.delivery_date).to_date %></span></td>
+          <td class="align-center"><div class="state <%= order.state.downcase %>"><%= Spree.t("order_state.#{order.state.downcase}") %></div></td>
         </tr>
       <% end %>
     </tbody>
