@@ -21,7 +21,9 @@
 
 <% content_for :sidebar do %>
   <% if @recurring_order.complete_after_create? %>
-    This order is completed immediately after creation
+    <p class='alert notice'>
+      This order is completed immediately after creation
+    </p>
   <% end %>
 
   <header id="order_tab_summary" data-hook>
