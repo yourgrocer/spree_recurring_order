@@ -4,6 +4,11 @@
   <% else %>
     <li><%= button_link_to("Activate", admin_recurring_order_url(number: @recurring_order.number, active: true), {:method => :put, :icon => 'play'}) %></li>
   <% end %>
+  <% if @recurring_order.complete_after_create %>
+    <li><%= button_link_to("Complete on delivery", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: false), {:method => :put, :icon => 'calendar'}) %></li>
+  <% else %>
+    <li><%= button_link_to("Complete on creation", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: true), {:method => :put, :icon => 'check'}) %></li>
+  <% end %>
 <% end %>
 
 <% content_for :page_title do %>
@@ -15,6 +20,10 @@
 <% end %>
 
 <% content_for :sidebar do %>
+  <% if @recurring_order.complete_after_create? %>
+    This order is completed immediately after creation
+  <% end %>
+
   <header id="order_tab_summary" data-hook>
     <dl class="additional-info">
       <dt id="order_email" data-hook><%= Spree.t(:email) %>:</dt>
@@ -27,7 +36,6 @@
       <dd><%= l (@recurring_order.created_at).to_date %></dd>
     </dl>
   </header>
-
 <% end %>
 
 <% if @recurring_order.base_list %>
@@ -70,8 +78,6 @@
 
     <%= form_tag(admin_recurring_order_recurring_list_orders_path(@recurring_order), method: :post) do -%>
       <%= submit_tag "Create Order" -%>
-      <label for="cb_auto_complete_order">and complete </label>
-      <%= check_box_tag "complete_after_create", @recurring_order.complete_after_create ? "0" : "1", @recurring_order.complete_after_create  -%>
     <% end %>
   </fieldset>
 <% end %>
