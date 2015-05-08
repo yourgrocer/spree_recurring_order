@@ -20,7 +20,7 @@ describe Spree::Admin::RecurringListOrdersController do
         recurring_list = FactoryGirl.create(:recurring_list, user: user)
         recurring_order = Spree::RecurringOrder.create(recurring_lists: [recurring_list])
 
-        spree_post :create, recurring_order_id: recurring_order.id 
+        spree_post :create, recurring_order_id: recurring_order.id, complete_after_create: "0"
 
         created_order = Spree::Order.last
         expect(created_order.email).to eq(user.email)
@@ -36,19 +36,21 @@ describe Spree::Admin::RecurringListOrdersController do
       let(:normal_user){double(Spree::User, email: 'test@email.com', has_incomplete_order_booked?: false).as_null_object}
       let(:item){FactoryGirl.build(:recurring_list_item)}
       let(:base_list){double(Spree::RecurringList, user: normal_user, items: [item]).as_null_object}
-      let(:recurring_order){double(Spree::RecurringOrder, id: 1, number: '1234', base_list: base_list)}
+      let(:recurring_order){double(Spree::RecurringOrder, id: 1, number: '1234', base_list: base_list, complete_after_create: false)}
 
       before :each do
         allow(Spree::RecurringOrder).to receive(:find).with("1").and_return(recurring_order)
         allow(Spree::Order).to receive(:new).and_return(new_order)
 
+        allow(recurring_order).to receive(:complete_after_create=).and_return(false)
+        allow(recurring_order).to receive(:save)
         allow(Spree::OrderContents).to receive(:new).and_return(order_contents)
         allow(order_contents).to receive(:add)
       end
 
       it 'should redirect to new order path' do
         allow(recurring_order).to receive(:create_order_from_base_list).and_return(new_order)
-        spree_post :create, recurring_order_id: recurring_order.id 
+        spree_post :create, recurring_order_id: recurring_order.id, complete_after_create: "0"
         expect(response).to redirect_to("/admin/orders/#{new_order.number}/edit")
       end
 
@@ -56,7 +58,7 @@ describe Spree::Admin::RecurringListOrdersController do
         invalid_recurring_order = double(Spree::RecurringOrder, id: 1, number: '1234', base_list: nil)
         allow(Spree::RecurringOrder).to receive(:find).and_return(invalid_recurring_order)
 
-        spree_post :create, recurring_order_id: recurring_order.id 
+        spree_post :create, recurring_order_id: recurring_order.id, complete_after_create: "0"
         expect(response).to redirect_to("/admin/recurring_orders/#{invalid_recurring_order.number}")
       end
 
@@ -65,7 +67,7 @@ describe Spree::Admin::RecurringListOrdersController do
         allow(normal_user).to receive(:has_incomplete_order_booked?).and_return(true)
 
         expect(Spree::Order).not_to receive(:create)
-        spree_post :create, recurring_order_id: recurring_order.id
+        spree_post :create, recurring_order_id: recurring_order.id, complete_after_create: "0"
 
         expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
       end
@@ -73,7 +75,7 @@ describe Spree::Admin::RecurringListOrdersController do
       it 'should fail if order validation fails' do
         allow(new_order).to receive(:valid?).and_return false
         allow(recurring_order).to receive(:create_order_from_base_list).and_return(new_order)
-        spree_post :create, recurring_order_id: recurring_order.id
+        spree_post :create, recurring_order_id: recurring_order.id, complete_after_create: "0"
         expect(response).to redirect_to("/admin/recurring_orders/#{recurring_order.number}")
       end
 

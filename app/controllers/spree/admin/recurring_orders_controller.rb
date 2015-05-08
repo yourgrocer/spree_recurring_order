@@ -27,7 +27,7 @@ module Spree
       private
 
       def update_params
-        params.permit(:active)
+        params.permit(:active, :complete_after_create)
       end
 
     end

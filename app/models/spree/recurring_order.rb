@@ -1,5 +1,6 @@
 module Spree
   class RecurringOrder < ActiveRecord::Base
+    define_model_callbacks :create_order, only: [:after, :before]
 
     validate :at_least_one_order_or_list
 
@@ -18,29 +19,30 @@ module Spree
     end
 
     def create_order_from_base_list
-      new_order = Spree::Order.new
-      new_order.recurring_order = self
-      new_order.email = base_list.user.email
-      new_order.created_by = base_list.user
-      new_order.user = base_list.user
+      run_callbacks :create_order do
+        @new_order = Spree::Order.new
+        @new_order.recurring_order = self
+        @new_order.email = base_list.user.email
+        @new_order.created_by = base_list.user
+        @new_order.user = base_list.user
 
-      new_order.ship_address = ship_address(base_list) 
-      new_order.bill_address = bill_address(base_list) 
+        @new_order.ship_address = ship_address(base_list)
+        @new_order.bill_address = bill_address(base_list)
 
-      set_new_order_extended_values(new_order)
+        set_new_order_extended_values(@new_order)
 
-      if new_order.save
-        new_order.merge!(order_to_merge) if (order_to_merge && order_to_merge != new_order)
-        order_contents = Spree::OrderContents.new(new_order)
-        base_list.items.each do |item|
-          order_contents.add(item.variant, item.quantity, quick_add: true)
+        if @new_order.save
+          @new_order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @new_order)
+          order_contents = Spree::OrderContents.new(@new_order)
+          base_list.items.each do |item|
+            order_contents.add(item.variant, item.quantity, quick_add: true)
+          end
+          base_list.update_next_delivery_date!
+
+          move_order_to_payment_state(@new_order)
         end
-        base_list.update_next_delivery_date!
-
-        move_order_to_payment_state(new_order)
+        @new_order
       end
-
-      new_order
     end
 
     def user
@@ -55,11 +57,11 @@ module Spree
       @original_order ||= orders.sort_by{|order| order.created_at}.first
     end
 
-    def ship_address(base_list) 
+    def ship_address(base_list)
       base_list.user.orders.complete.last.ship_address.dup
     end
 
-    def bill_address(base_list) 
+    def bill_address(base_list)
       base_list.user.orders.complete.last.bill_address.dup
     end
 

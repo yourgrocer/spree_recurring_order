@@ -4,6 +4,11 @@
   <% else %>
     <li><%= button_link_to("Activate", admin_recurring_order_url(number: @recurring_order.number, active: true), {:method => :put, :icon => 'play'}) %></li>
   <% end %>
+  <% if @recurring_order.complete_after_create %>
+    <li><%= button_link_to("Complete on delivery", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: false), {:method => :put, :icon => 'calendar'}) %></li>
+  <% else %>
+    <li><%= button_link_to("Complete on creation", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: true), {:method => :put, :icon => 'check'}) %></li>
+  <% end %>
 <% end %>
 
 <% content_for :page_title do %>
@@ -15,6 +20,12 @@
 <% end %>
 
 <% content_for :sidebar do %>
+  <% if @recurring_order.complete_after_create? %>
+    <p class='alert notice'>
+      This order is completed immediately after creation
+    </p>
+  <% end %>
+
   <header id="order_tab_summary" data-hook>
     <dl class="additional-info">
       <dt id="order_email" data-hook><%= Spree.t(:email) %>:</dt>
@@ -27,7 +38,6 @@
       <dd><%= l (@recurring_order.created_at).to_date %></dd>
     </dl>
   </header>
-
 <% end %>
 
 <% if @recurring_order.base_list %>
@@ -81,6 +91,7 @@
       <th><%= Spree.t('number')%></th> 
       <th><%= Spree.t('created_date')%></th>
       <th><%= Spree.t('delivery_date')%></th>
+      <th><%= Spree.t('state')%></th>
     </thead>
     <tbody class="with-border">
       <% @recurring_order.orders.each do |order| %>
@@ -88,6 +99,7 @@
           <td class="align-center"><strong><%= link_to order.number, edit_admin_order_path(order) %></strong></td>
           <td class="align-center"><span><%= l (order.created_at).to_date %></span></td>
           <td class="align-center"><span><%= l (order.delivery_date).to_date %></span></td>
+          <td class="align-center"><div class="state <%= order.state.downcase %>"><%= Spree.t("order_state.#{order.state.downcase}") %></div></td>
         </tr>
       <% end %>
     </tbody>
