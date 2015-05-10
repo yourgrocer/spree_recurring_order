@@ -51,11 +51,6 @@ describe Spree::RecurringOrder do
     end
 
 
-    it 'should update next_delivery_date for recurring order' do
-      expect(@base_list).to receive(:update_next_delivery_date!)
-      @recurring_order.create_order_from_base_list
-    end
-
     it 'should add items from base list' do
       expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
       @recurring_order.create_order_from_base_list

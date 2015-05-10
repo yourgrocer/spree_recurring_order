@@ -37,8 +37,6 @@ module Spree
           base_list.items.each do |item|
             order_contents.add(item.variant, item.quantity, quick_add: true)
           end
-          base_list.update_next_delivery_date!
-
           move_order_to_payment_state(@new_order)
         end
         @new_order
