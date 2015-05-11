@@ -12,12 +12,6 @@ module Spree
           @recurring_order.save
           new_order = @recurring_order.create_order_from_base_list
           if new_order.valid?
-            if @recurring_order.complete_after_create
-              new_order.auto_complete
-              flash[:warning] = 'Order created but auto completing it failed' unless new_order.complete?
-            else
-              @recurring_order.complete_after_create = false
-            end
             redirect_to(edit_admin_order_url(new_order.number))
           else
             fail_with_message("#{new_order.errors.full_messages.first}")
