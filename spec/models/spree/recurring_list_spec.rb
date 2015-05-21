@@ -49,11 +49,12 @@ describe Spree::RecurringOrder do
 
     it 'should add item if it doesnt exist' do
       list = FactoryGirl.create(:recurring_list) 
-      expect(list.add_item(variant_id: 1, quantity: 2)).to be_truthy
+      result = list.add_item(variant_id: 1, quantity: 2)
 
       expect(list.items.empty?).to be_falsey
       expect(list.items.last.variant_id).to eq(1)
       expect(list.items.last.quantity).to eq(2)
+      expect(result).to eq(list.items.last)
     end
 
     it 'should update item if it exists' do
@@ -61,16 +62,18 @@ describe Spree::RecurringOrder do
       variant_id = list.items.first.variant_id
       quantity = list.items.first.quantity
 
-      expect(list.add_item(variant_id: variant_id, quantity: 99)).to be_truthy
+      result = list.add_item(variant_id: variant_id, quantity: 99)
 
       expect(list.items.size).to eq(1) 
       expect(list.items.last.variant_id).to eq(variant_id)
       expect(list.items.last.quantity).to eq(99 + quantity)
+      expect(result).to eq(list.items.first)
     end
 
     it 'should fail and not update if variant_id is invalid' do
       list = FactoryGirl.create(:recurring_list) 
-      expect(list.add_item(variant_id: '666', quantity: 99)).to be_falsey
+      result = list.add_item(variant_id: '666', quantity: 99)
+      expect(result).to be_nil
       expect(list.items.size).to eq(1) 
     end
 

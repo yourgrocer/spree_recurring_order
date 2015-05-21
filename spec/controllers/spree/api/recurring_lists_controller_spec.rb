@@ -33,7 +33,7 @@ describe Spree::Api::RecurringListsController do
 
     it 'should update item from the list' do
       allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
-      expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(true)
+      expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(FactoryGirl.create(:recurring_list_item))
 
       api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
       expect(response.status).to eq(200)

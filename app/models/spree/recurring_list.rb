@@ -31,15 +31,18 @@ module Spree
     end
 
     def add_item(item_params)
-      return false unless Spree::Variant.find_by(id: item_params[:variant_id])
+      return nil unless Spree::Variant.find_by(id: item_params[:variant_id])
 
-      existing_item = items.select{|item| item.variant_id == item_params[:variant_id].to_i}.first
-      if existing_item
-        existing_item.update_attributes(quantity: existing_item.quantity + item_params[:quantity].to_i)
+      updated_item = items.select{|item| item.variant_id == item_params[:variant_id].to_i}.first
+      if updated_item
+        updated_item.update_attributes(quantity: updated_item.quantity + item_params[:quantity].to_i)
       else
-        self.items << Spree::RecurringListItem.new(item_params)
+        updated_item = Spree::RecurringListItem.new(item_params)
+        self.items << updated_item
       end
+
       self.save
+      updated_item
     end
 
     private

@@ -9,7 +9,8 @@ module Spree
         if destroy_item?
           recurring_list.remove_item(id: item_params[:recurring_list_item][:id]) ? return_success : return_failure
         else
-          recurring_list.add_item(item_params[:recurring_list_item]) ? return_success : return_failure
+          item = recurring_list.add_item(item_params[:recurring_list_item])
+          item && item.valid? ? return_success(item) : return_failure
         end
       end
 
@@ -20,8 +21,9 @@ module Spree
         !params[:recurring_list_item][:destroy].nil?
       end
 
-      def return_success
-        render json: 'OK'.to_json, status: 200
+      def return_success(item=nil)
+        result = item.nil? ? 'OK' : item
+        render json: result.to_json, status: 200
       end
 
       def return_failure
