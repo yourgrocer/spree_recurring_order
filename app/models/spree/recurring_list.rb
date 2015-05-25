@@ -8,7 +8,6 @@ module Spree
     validates :user, presence: true
     validates :next_delivery_date, presence: true
     validates :timeslot, presence: true
-    validate :items_present
 
     after_create :generate_api_key_if_not_present
 
@@ -20,7 +19,7 @@ module Spree
       recurring_list.items = order.line_items.map{|line_item| Spree::RecurringListItem.from_line_item(line_item)}
       recurring_list
     end
-    
+
     def update_next_delivery_date!
       update_attributes(next_delivery_date: next_delivery_date + 7.days)
     end
@@ -49,12 +48,6 @@ module Spree
 
     def generate_api_key_if_not_present
       user.generate_spree_api_key! if user.spree_api_key.nil?
-    end
-
-    def items_present
-      if items.empty?
-        errors[:items] << "are empty. Please add at least one item to your regular order"
-      end
     end
   end
 end
