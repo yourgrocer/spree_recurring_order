@@ -29,6 +29,12 @@ module Spree
       item.nil? ? false : item.destroy
     end
 
+    def set_valid_next_delivery_date!
+      return unless next_delivery_date <= (Time.zone.now.to_date + 1.day)
+
+      update_next_delivery_date!
+    end
+
     def add_item(item_params)
       return nil unless Spree::Variant.find_by(id: item_params[:variant_id])
 
