@@ -40,7 +40,7 @@ module Spree
     end
 
     def set_valid_next_delivery_date!
-      return unless next_delivery_date <= (Time.zone.now.to_date + 1.day)
+      return if next_delivery_date > (Time.zone.now.to_date + CREATE_TIMESPAN)
 
       update_next_delivery_date!
     end
