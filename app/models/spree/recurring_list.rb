@@ -1,5 +1,8 @@
 module Spree
   class RecurringList < ActiveRecord::Base
+    CREATE_TIMESPAN   = 3.days
+    COMPLETE_TIMESPAN = 1.day
+
     belongs_to :user
     belongs_to :recurring_order, :dependent => :destroy
     has_many :items, class_name: 'Spree::RecurringListItem'
@@ -10,6 +13,13 @@ module Spree
     validates :timeslot, presence: true
 
     after_create :generate_api_key_if_not_present
+
+    scope :to_create, lambda { |date|
+      where next_delivery_date: (date + CREATE_TIMESPAN)
+    }
+    scope :to_complete, lambda { |date|
+      where next_delivery_date: date..(date + COMPLETE_TIMESPAN)
+    }
 
     def self.build_from_order(order)
       recurring_list = Spree::RecurringList.new
