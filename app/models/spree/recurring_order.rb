@@ -11,6 +11,14 @@ module Spree
 
     after_create :generate_order_number
 
+    scope :active, lambda { where active: true }
+    scope :to_create, lambda { |date|
+      joins(:recurring_lists).merge Spree::RecurringList.to_create(date)
+    }
+    scope :to_complete, lambda { |date|
+      joins(:recurring_lists).merge Spree::RecurringList.to_complete(date)
+    }
+
     def self.create_from_order(order)
       recurring_order = RecurringOrder.new
       recurring_order.orders << order

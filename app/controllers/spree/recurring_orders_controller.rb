@@ -20,8 +20,12 @@ module Spree
     end
 
     def update
-      @recurring_order = Spree::RecurringOrder.find(params[:id])
-      @recurring_order.update_attributes(update_params)
+      order  = Spree::RecurringOrder.find(params[:id])
+      active = order.active
+
+      order.update_attributes(update_params)
+      adjust_next_delivery_dates(order) if !active && order.active
+
       render :nothing => true, :status => 200, :content_type => 'text/html'
     end
 
@@ -31,6 +35,10 @@ module Spree
 
     private
 
+    def adjust_next_delivery_dates(order)
+      order.recurring_lists.each &:set_valid_next_delivery_date!
+    end
+
     def recurring_order_params
       params[:recurring_order].permit(:original_order_id)
     end
@@ -38,6 +46,5 @@ module Spree
     def update_params
       params[:recurring_order].permit(:active)
     end
-
   end
 end

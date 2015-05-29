@@ -1,5 +1,8 @@
 module Spree
   class RecurringList < ActiveRecord::Base
+    CREATE_TIMESPAN   = 3.days
+    COMPLETE_TIMESPAN = 1.day
+
     belongs_to :user
     belongs_to :recurring_order, :dependent => :destroy
     has_many :items, class_name: 'Spree::RecurringListItem'
@@ -8,9 +11,15 @@ module Spree
     validates :user, presence: true
     validates :next_delivery_date, presence: true
     validates :timeslot, presence: true
-    validate :items_present
 
     after_create :generate_api_key_if_not_present
+
+    scope :to_create, lambda { |date|
+      where next_delivery_date: (date + CREATE_TIMESPAN)
+    }
+    scope :to_complete, lambda { |date|
+      where next_delivery_date: date..(date + COMPLETE_TIMESPAN)
+    }
 
     def self.build_from_order(order)
       recurring_list = Spree::RecurringList.new
@@ -20,7 +29,7 @@ module Spree
       recurring_list.items = order.line_items.map{|line_item| Spree::RecurringListItem.from_line_item(line_item)}
       recurring_list
     end
-    
+
     def update_next_delivery_date!
       update_attributes(next_delivery_date: next_delivery_date + 7.days)
     end
@@ -28,6 +37,12 @@ module Spree
     def remove_item(item_params)
       item = items.where(item_params).first
       item.nil? ? false : item.destroy
+    end
+
+    def set_valid_next_delivery_date!
+      return if next_delivery_date > (Time.zone.now.to_date + CREATE_TIMESPAN)
+
+      update_next_delivery_date!
     end
 
     def add_item(item_params)
@@ -49,12 +64,6 @@ module Spree
 
     def generate_api_key_if_not_present
       user.generate_spree_api_key! if user.spree_api_key.nil?
-    end
-
-    def items_present
-      if items.empty?
-        errors[:items] << "are empty. Please add at least one item to your regular order"
-      end
     end
   end
 end
