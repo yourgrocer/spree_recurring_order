@@ -1,7 +1,7 @@
 module Spree
   class RecurringList < ActiveRecord::Base
-    CREATE_TIMESPAN   = 3.days
-    COMPLETE_TIMESPAN = 1.day
+    CREATE_TIMESPAN   = 1.days
+    COMPLETE_TIMESPAN = 0.day
 
     belongs_to :user
     belongs_to :recurring_order, :dependent => :destroy
