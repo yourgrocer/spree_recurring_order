@@ -28,6 +28,8 @@ module Spree
 
     def create_order_from_base_list
       run_callbacks :create_order do
+        order_to_merge = base_list.nil? ? nil : base_list.user.last_incomplete_spree_order 
+
         @new_order = Spree::Order.new
         @new_order.recurring_order = self
         @new_order.email = base_list.user.email
@@ -80,11 +82,6 @@ module Spree
     end
 
     private
-
-    def order_to_merge
-      @order_to_merge ||= base_list.nil? ? nil : base_list.user.last_incomplete_spree_order
-      @order_to_merge
-    end
 
     def move_order_to_review_state(order)
       counter = 0
