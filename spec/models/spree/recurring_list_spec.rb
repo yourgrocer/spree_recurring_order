@@ -60,7 +60,7 @@ describe Spree::RecurringOrder do
 
       expect(list.items.size).to eq(1)
       expect(list.items.last.variant_id).to eq(variant_id)
-      expect(list.items.last.quantity).to eq(99 + quantity)
+      expect(list.items.last.quantity).to eq(99)
       expect(result).to eq(list.items.first)
     end
 
