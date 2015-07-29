@@ -26,7 +26,9 @@ module Spree
       order.update_attributes(update_params)
       adjust_next_delivery_dates(order) if !active && order.active
 
-      render :nothing => true, :status => 200, :content_type => 'text/html'
+      render json: {
+        next_delivery_date: order.recurring_lists.first.next_delivery_date
+      }, status: 200
     end
 
     def show
