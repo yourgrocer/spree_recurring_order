@@ -29,7 +29,8 @@ describe Spree::Api::RecurringListsController do
 
   describe 'updating items' do
 
-    let(:recurring_list){FactoryGirl.build(:recurring_list)}
+    let(:recurring_order){FactoryGirl.build(:recurring_order)}
+    let(:recurring_list){FactoryGirl.build(:recurring_list, recurring_order: recurring_order, user: user)}
 
     it 'should update item from the list' do
       allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
@@ -42,6 +43,26 @@ describe Spree::Api::RecurringListsController do
     it 'should remove item from the list if destroy param is passed' do
       allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
       expect(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
+
+      api_put :update, id: 1, recurring_list_item: {id: 123, destroy: true}
+      expect(response.status).to eq(200)
+    end
+
+    it 'should pause recurring order if list is empty' do
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(recurring_list).to receive(:items).and_return([])
+      allow(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
+      expect(recurring_order).to receive(:update_attributes).with(active: false)
+
+      api_put :update, id: 1, recurring_list_item: {id: 123, destroy: true}
+      expect(response.status).to eq(200)
+    end
+
+    it 'should not pause recurring order if list is not empty' do
+      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(recurring_list).to receive(:items).and_return([Spree::RecurringListItem.new])
+      allow(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
+      expect(recurring_order).not_to receive(:update_attributes)
 
       api_put :update, id: 1, recurring_list_item: {id: 123, destroy: true}
       expect(response.status).to eq(200)

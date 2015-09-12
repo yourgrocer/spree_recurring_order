@@ -12,4 +12,11 @@ FactoryGirl.define do
       list.items << FactoryGirl.build(:recurring_list_item)
     end
   end
+
+  factory :recurring_order, class: Spree::RecurringOrder do
+    active true
+    after(:build) do |order|
+      order.recurring_lists << FactoryGirl.build(:recurring_list)
+    end
+  end
 end

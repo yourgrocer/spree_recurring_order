@@ -7,7 +7,13 @@ module Spree
       def update
         recurring_list = Spree::RecurringList.find(params[:id])
         if destroy_item?
-          recurring_list.remove_item(id: item_params[:recurring_list_item][:id]) ? return_success : return_failure
+          success = recurring_list.remove_item(id: item_params[:recurring_list_item][:id])
+          if success
+            pause_recurring_order!(recurring_list) if recurring_list.items.empty?
+            return_success
+          else
+            return_failure
+          end
         else
           item = recurring_list.add_item(item_params[:recurring_list_item])
           item && item.valid? ? return_success(item) : return_failure
@@ -16,6 +22,10 @@ module Spree
 
 
       private
+
+      def pause_recurring_order!(recurring_list)
+        recurring_list.recurring_order.update_attributes(active: false)
+      end
 
       def destroy_item?
         !params[:recurring_list_item][:destroy].nil?
