@@ -9,19 +9,6 @@ describe Spree::Admin::RecurringOrdersController do
     controller.stub :check_authorization
   end
 
-  describe 'index' do
-
-    it 'should get all recurring orders' do
-      orders = []
-      expect(Spree::RecurringOrder).to receive(:all).at_least(2).times.and_return(orders)
-      allow(orders).to receive(:where)
-
-      spree_get :index
-      assigns(:recurring_orders).should == orders
-    end
-
-  end
-
   describe 'show' do
 
     it 'should assign recurring order' do

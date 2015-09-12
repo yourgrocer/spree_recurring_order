@@ -6,8 +6,6 @@ module Spree
         @recurring_order = Spree::RecurringOrder.find(params[:recurring_order_id])
         if base_list.nil?
           fail_with_message('Recurring order does not have a base list')
-        elsif base_list.user.has_incomplete_order_booked?
-          fail_with_message('User has already an existing incomplete order with delivery date set')
         else
           @recurring_order.save
           new_order = @recurring_order.create_order_from_base_list
@@ -22,7 +20,7 @@ module Spree
       private
 
       def fail_with_message(message)
-        flash[:error] = "Order creation failed - #{message}" 
+        flash[:error] = "Order creation failed - #{message}"
         redirect_to(admin_recurring_order_url(@recurring_order.number))
       end
 
