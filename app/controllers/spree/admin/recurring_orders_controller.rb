@@ -1,14 +1,20 @@
 module Spree
   module Admin
-    class RecurringOrdersController < ResourceController 
+    class RecurringOrdersController < ResourceController
 
       helper 'application'
 
       skip_before_action :load_resource, only: [:update]
 
       def index
-        @recurring_orders = Spree::RecurringOrder.all.select{|order| !order.original_order.nil? && order.base_list.nil? }
-        @recurring_orders_with_lists = Spree::RecurringOrder.all
+        @active_recurring_orders = Spree::RecurringOrder.all
+          .where(active: true)
+          .select{|order| !order.recurring_lists.empty? }
+          .sort_by!{|order| order.base_list.next_delivery_date}
+          .reverse
+
+        @inactive_recurring_orders = Spree::RecurringOrder.all
+          .where(active: false)
           .select{|order| !order.recurring_lists.empty? }
           .sort_by!{|order| order.base_list.next_delivery_date}
           .reverse
