@@ -15,7 +15,7 @@ describe Spree::RecurringOrdersController do
   describe 'integration' do
 
     it 'should create new recurring order (integration)' do
-      pending("Failing since spree upgrade")
+      skip("Failing since spree upgrade")
       old_order = FactoryGirl.create(:order)
       spree_post :create, recurring_order: {original_order_id: old_order.id}
       Spree::RecurringOrder.last.original_order.should == old_order
@@ -32,7 +32,7 @@ describe Spree::RecurringOrdersController do
 
 
     it 'should create new recurring order' do
-      pending("Failing since spree upgrade")
+      skip("Failing since spree upgrade")
       orders.should_receive(:<<).with(original_order)
       recurring_order.should_receive(:save).and_return(true)
 
@@ -41,7 +41,7 @@ describe Spree::RecurringOrdersController do
     end
 
     it 'should render order complete if recurring order cant be saved' do
-      pending("Failing since spree upgrade")
+      skip("Failing since spree upgrade")
       recurring_order.should_receive(:save).and_return(false)
 
       spree_post :create, recurring_order: {original_order_id: 1}
@@ -49,7 +49,7 @@ describe Spree::RecurringOrdersController do
     end
 
     it 'should render order complete if recurring order already exists' do
-      pending("Failing since spree upgrade")
+      skip("Failing since spree upgrade")
       original_order.stub(:recurring_order).and_return(recurring_order)
       spree_post :create, recurring_order: {original_order_id: 1}
       response.should redirect_to("/orders/G1234")
@@ -64,7 +64,7 @@ describe Spree::RecurringOrdersController do
     end
 
     it 'should render' do
-      pending("Failing since spree upgrade")
+      skip("Failing since spree upgrade")
       spree_post :show, id: 1
       response.should render_template(:show)
     end
