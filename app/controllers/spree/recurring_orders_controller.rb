@@ -8,6 +8,7 @@ module Spree
         @recurring_order.orders << original_order
 
         if @recurring_order.save
+          @recurring_order.deliver_recurring_induction_email
           redirect_to(spree.recurring_order_url(@recurring_order.id))
         else
           flash[:notice] = "Hmmm... There was a problem creating your regular order. Please get in touch at hello@yourgrocer.com.au and we are going to sort it out for you."
