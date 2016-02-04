@@ -31,7 +31,11 @@ module Spree
     end
 
     def update_next_delivery_date!
-      update_attributes(next_delivery_date: next_delivery_date + 7.days)
+      possible_delivery_date = next_delivery_date + 7.days
+      while possible_delivery_date < Time.zone.now.to_date + CREATE_TIMESPAN do
+        possible_delivery_date = possible_delivery_date + 7.days
+      end
+      update_attributes(next_delivery_date: possible_delivery_date)
     end
 
     def remove_item(item_params)
