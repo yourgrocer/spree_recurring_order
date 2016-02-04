@@ -10,6 +10,7 @@ module Spree
     belongs_to :original_order, class_name: 'Spree::Order'
 
     after_create :generate_order_number
+    after_create :deliver_recurring_induction_email
 
     scope :active, lambda { where active: true }
     scope :to_create, lambda { |date|
@@ -28,7 +29,7 @@ module Spree
 
     def create_order_from_base_list
       run_callbacks :create_order do
-        order_to_merge = base_list.nil? ? nil : base_list.user.last_incomplete_spree_order 
+        order_to_merge = base_list.nil? ? nil : base_list.user.last_incomplete_spree_order
 
         @new_order = Spree::Order.new
         @new_order.recurring_order = self
@@ -81,6 +82,10 @@ module Spree
       original_order.ship_address.phone rescue 'N/A'
     end
 
+    def deliver_recurring_induction_email
+      Spree::OrderMailer.recurring_induction_email(self.id).deliver
+    end
+
     private
 
     def move_order_to_review_state(order)
@@ -112,6 +117,5 @@ module Spree
       self.number
       self.save!
     end
-
   end
 end

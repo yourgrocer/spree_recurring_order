@@ -116,7 +116,6 @@ describe Spree::RecurringOrder do
   end
 
   describe 'delegation' do
-
     let(:ship_address){FactoryGirl.build(:address)}
     let(:order){FactoryGirl.build(:order, ship_address: ship_address)}
 
@@ -131,15 +130,12 @@ describe Spree::RecurringOrder do
         @recurring_order.email.should == order.email
       end
 
-
       it 'should delegate customer phone to original order' do
         @recurring_order.phone.should == order.ship_address.phone
       end
-
     end
 
     context 'with recurring list' do
-
       before :each do
         @recurring_order = Spree::RecurringOrder.new
         @user = FactoryGirl.build(:user, email: 'test@email.com')
@@ -152,9 +148,19 @@ describe Spree::RecurringOrder do
       end
 
       it 'should be NA if there is no original order' do
-        @recurring_order.phone.should == 'N/A' 
+        @recurring_order.phone.should == 'N/A'
       end
+    end
+  end
 
+  describe 'deliver regular order induction email' do
+    it 'should deliver when regular order is created' do
+      recurring_order = Spree::RecurringOrder.new
+      mail = double(Object)
+      Spree::OrderMailer.should_receive(:recurring_induction_email).with(recurring_order.id).and_return(mail)
+      mail.should_receive(:deliver)
+
+      recurring_order.deliver_recurring_induction_email
     end
 
   end

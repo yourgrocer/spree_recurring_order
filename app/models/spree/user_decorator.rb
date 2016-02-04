@@ -1,5 +1,5 @@
 Spree::User.class_eval do
-  has_one :base_list, class_name: "Spree::RecurringList"
+  has_one :base_list, class_name: "Spree::RecurringList", dependent: :destroy
 
   def has_active_regular_order?
     self.base_list.recurring_order.active? rescue false
