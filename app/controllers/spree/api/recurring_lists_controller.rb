@@ -2,10 +2,12 @@ module Spree
   module Api
     class RecurringListsController < Spree::Api::BaseController
 
-      before_filter :authorize_user_for_list
+      before_filter :verify_logged_in_user
 
       def update
         recurring_list = Spree::RecurringList.find(params[:id])
+        authorize! :update, recurring_list
+
         if destroy_item?
           success = recurring_list.remove_item(id: item_params[:recurring_list_item][:id])
           if success
@@ -38,13 +40,6 @@ module Spree
 
       def return_failure
         render json: 'Update failed'.to_json, status: 400
-      end
-
-      def authorize_user_for_list
-        recurring_list = Spree::RecurringList.find(params[:id])
-        if recurring_list.user_id != current_api_user.id
-          render "spree/api/errors/unauthorized", :status => 401 and return
-        end
       end
 
       def item_params

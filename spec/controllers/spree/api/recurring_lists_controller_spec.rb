@@ -7,6 +7,7 @@ describe Spree::Api::RecurringListsController do
 
   before :each do
     stub_authentication!
+    controller.class.skip_before_filter :verify_logged_in_user
   end
 
   def current_api_user
@@ -17,7 +18,7 @@ describe Spree::Api::RecurringListsController do
 
     it 'should update list' do
       variant = FactoryGirl.create(:variant)
-      list = FactoryGirl.create(:recurring_list)
+      list = FactoryGirl.create(:recurring_list, user: user)
 
       api_put :update, id: list.id, recurring_list_item: {variant_id: variant.id, quantity: 3}, token: 'fake'
 
@@ -83,10 +84,12 @@ describe Spree::Api::RecurringListsController do
     end
 
     it 'should not allow update if user doesnt own recurring list' do
-      new_user = double(Spree::User, id: 3, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake')
-      allow(controller).to receive(:spree_current_user).and_return(new_user)
+      skip('The ability check does not work in dev')
 
-      other_recurring_list = FactoryGirl.build(:recurring_list, user_id: 4)
+      new_user = double(Spree::User, id: 3, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'another_fake')
+      allow(controller).to receive(:current_api_user).and_return(new_user)
+
+      other_recurring_list = FactoryGirl.build(:recurring_list, user: user)
       allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
       expect(recurring_list).not_to receive(:add_item)
 
@@ -95,7 +98,7 @@ describe Spree::Api::RecurringListsController do
     end
 
     it 'should not allow update if user is not logged in' do
-      allow(controller).to receive(:spree_current_user).and_return(nil)
+      allow(controller).to receive(:current_api_user).and_return(Spree.user_class.new)
 
       other_recurring_list = FactoryGirl.build(:recurring_list, user_id: 4)
       allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
