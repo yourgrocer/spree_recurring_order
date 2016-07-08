@@ -8,6 +8,13 @@ describe Spree::RecurringOrder do
       list.update_next_delivery_date!
       expect(list.reload.next_delivery_date).to eq(Date.today + 7.days)
     end
+
+    it 'should move next delivery date to same week day in the future if order is more than a week behind' do |variable|
+      list = FactoryGirl.create(:recurring_list, next_delivery_date: Date.today - 21.days)
+      list.update_next_delivery_date!
+      expect(list.reload.next_delivery_date).to eq(Date.today + 7.days)
+    end
+
   end
 
   describe 'validation' do
