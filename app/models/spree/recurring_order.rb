@@ -46,7 +46,9 @@ module Spree
           @new_order.merge!(order_to_merge) if (order_to_merge && order_to_merge != @new_order)
           order_contents = Spree::OrderContents.new(@new_order)
           base_list.items.each do |item|
-            order_contents.add(item.variant, item.quantity, quick_add: true)
+            if item.variant.product.available?
+              order_contents.add(item.variant, item.quantity, quick_add: true)
+            end
           end
           move_order_to_review_state(@new_order)
         end

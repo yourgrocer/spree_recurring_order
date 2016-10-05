@@ -17,6 +17,7 @@ describe Spree::RecurringOrder do
     let(:normal_user){FactoryGirl.create(:user, email: 'test@email.com')}
     let(:order_contents){double(Spree::OrderContents).as_null_object}
     let(:item){FactoryGirl.build(:recurring_list_item)}
+    let(:unavailable_item){FactoryGirl.build(:recurring_list_item)}
     let(:base_list){Spree::RecurringList.new}
     let(:recurring_order){Spree::RecurringOrder.new}
 
@@ -32,6 +33,7 @@ describe Spree::RecurringOrder do
       @base_list = Spree::RecurringList.new(next_delivery_date: Date.tomorrow)
       @base_list.user = normal_user
       @base_list.items << item
+      @base_list.items << unavailable_item
       @recurring_order.recurring_lists << @base_list
     end
 
@@ -50,9 +52,17 @@ describe Spree::RecurringOrder do
       @recurring_order.create_order_from_base_list
     end
 
-
     it 'should add items from base list' do
       expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
+      @recurring_order.create_order_from_base_list
+    end
+
+    it 'should not add items from base list if they are unavailable' do
+      allow(unavailable_item.variant.product).to receive(:available?).and_return false
+
+      expect(order_contents).to receive(:add).with(item.variant, item.quantity, anything)
+      expect(order_contents).not_to receive(:add).with(unavailable_item.variant, unavailable_item.quantity, anything)
+
       @recurring_order.create_order_from_base_list
     end
   end
