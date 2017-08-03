@@ -16,7 +16,7 @@ module Spree
     def update
       @recurring_list = Spree::RecurringList.find(params[:id])
       @recurring_list.update_attributes({id: params[:id]}.merge(list_params))
-      
+
       if params["recurring_list"].has_key?("items_attributes")
         list_params[:items_attributes].each do |item_attributes|
           @recurring_list.remove_item(item_attributes) if item_attributes[:quantity].to_i == 0

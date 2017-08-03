@@ -23,7 +23,7 @@ describe Spree::RecurringListsController do
           "user_id" => new_user.id, "items_attributes" => {
             "0"=>{
               "variant_id"=>variant.id, "quantity"=>"1", "selected"=>"1"
-            }, 
+            },
           }
         }
       }
@@ -72,10 +72,10 @@ describe Spree::RecurringListsController do
       }))
 
       params = {"recurring_list" => {"user_id" => 2, "items_attributes" => {
-        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "selected" => '0'}, 
+        "0"=>{"variant_id"=>"7584", "quantity"=>"1", "selected" => '0'},
         "1"=>{"variant_id"=>"4953", "quantity"=>"3", "selected" => '1'}
       }}}
-      spree_post :create, params 
+      spree_post :create, params
     end
 
     it 'should fail and render error if recurring list is not valid' do
@@ -104,12 +104,14 @@ describe Spree::RecurringListsController do
 
     it 'should call item_remove on items with 0 quantity' do
       expect(list).to receive(:remove_item)
-      spree_post :update, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"0", "id"=>"475", "selected" => "1"}}}
+
+      spree_put :update, id: 1, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"0", "id"=>"475", "selected" => "1"}}}
     end
 
     it 'should not call item_remove on items with quantity > 0 ' do
       expect(list).not_to receive(:remove_item)
-      spree_post :update, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"1", "id"=>"475", "selected" => "1"}}}
+
+      spree_put :update, id: 1, recurring_list: {id: 1, user_id: 1, "items_attributes" => {"0" => {"variant_id"=>"314", "quantity"=>"1", "id"=>"475", "selected" => "1"}}}
     end
   end
 
