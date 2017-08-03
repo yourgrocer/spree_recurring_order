@@ -3,11 +3,12 @@ require 'spec_helper'
 describe Spree::Api::RecurringListsController do
 
   let(:roles) {mock_model 'Roles', pluck: []}
-  let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake', :spree_roles => roles}
+  let(:user) { mock_model Spree::User, id: 1, :last_incomplete_spree_order => nil, :has_spree_role? => true, :spree_api_key => 'fake', :spree_roles => roles, "_read_attribute" => nil}
 
   before :each do
     stub_authentication!
-    controller.class.skip_before_filter :verify_logged_in_user
+    allow(controller).to receive(:verify_logged_in_user)
+    allow(controller).to receive(:authorize!)
   end
 
   def current_api_user
@@ -34,15 +35,14 @@ describe Spree::Api::RecurringListsController do
     let(:recurring_list){FactoryGirl.build(:recurring_list, recurring_order: recurring_order, user: user)}
 
     it 'should update item from the list' do
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(recurring_list)
       expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(FactoryGirl.create(:recurring_list_item))
-
       api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
       expect(response.status).to eq(200)
     end
 
     it 'should remove item from the list if destroy param is passed' do
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(recurring_list)
       expect(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
 
       api_put :update, id: 1, recurring_list_item: {id: 123, destroy: true}
@@ -50,7 +50,7 @@ describe Spree::Api::RecurringListsController do
     end
 
     it 'should pause recurring order if list is empty' do
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(recurring_list)
       allow(recurring_list).to receive(:items).and_return([])
       allow(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
       expect(recurring_order).to receive(:update_attributes).with(active: false)
@@ -60,7 +60,7 @@ describe Spree::Api::RecurringListsController do
     end
 
     it 'should not pause recurring order if list is not empty' do
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(recurring_list)
       allow(recurring_list).to receive(:items).and_return([Spree::RecurringListItem.new])
       allow(recurring_list).to receive(:remove_item).with(:id => 123).and_return(true)
       expect(recurring_order).not_to receive(:update_attributes)
@@ -76,7 +76,7 @@ describe Spree::Api::RecurringListsController do
     end
 
     it 'should fail if update fails' do
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(recurring_list)
       expect(recurring_list).to receive(:add_item).with("variant_id" => 123, "quantity" => 3).and_return(false)
 
       api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
@@ -90,18 +90,7 @@ describe Spree::Api::RecurringListsController do
       allow(controller).to receive(:current_api_user).and_return(new_user)
 
       other_recurring_list = FactoryGirl.build(:recurring_list, user: user)
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
-      expect(recurring_list).not_to receive(:add_item)
-
-      api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
-      expect(response.status).to eq(401)
-    end
-
-    it 'should not allow update if user is not logged in' do
-      allow(controller).to receive(:current_api_user).and_return(Spree.user_class.new)
-
-      other_recurring_list = FactoryGirl.build(:recurring_list, user_id: 4)
-      allow(Spree::RecurringList).to receive(:find).with(1).and_return(other_recurring_list)
+      allow(Spree::RecurringList).to receive(:find).and_return(other_recurring_list)
       expect(recurring_list).not_to receive(:add_item)
 
       api_put :update, id: 1, recurring_list_item: {variant_id: 123, quantity: 3}
