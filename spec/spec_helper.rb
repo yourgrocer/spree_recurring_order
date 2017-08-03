@@ -16,6 +16,7 @@ ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../dummy/config/environment.rb',  __FILE__)
 
 require 'rspec/rails'
+require 'rspec/active_model/mocks'
 require 'database_cleaner'
 require 'ffaker'
 
@@ -47,7 +48,7 @@ RSpec.configure do |config|
   # visit spree.admin_path
   # current_path.should eql(spree.products_path)
   config.include Spree::TestingSupport::UrlHelpers
-  config.include Spree::TestingSupport::ControllerRequests 
+  config.include Spree::TestingSupport::ControllerRequests, :type => :controller
 
   config.include Spree::Api::TestingSupport::Helpers, :type => :controller
   config.extend Spree::Api::TestingSupport::Setup, :type => :controller

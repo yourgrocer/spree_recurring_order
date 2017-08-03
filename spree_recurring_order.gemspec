@@ -16,16 +16,16 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 2.4'
-  s.add_dependency 'spree_frontend', '~> 2.4'
-  s.add_dependency 'spree_backend', '~> 2.4'
-  s.add_dependency 'spree_api', '~> 2.4'
+  s.add_dependency 'spree_core', '= 3.0.0'
+  s.add_dependency 'spree_frontend', '= 3.0.0'
+  s.add_dependency 'spree_backend', '= 3.0.0'
+  s.add_dependency 'spree_api', '= 3.0.0'
 
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'delayed_job_active_record'
   s.add_runtime_dependency 'pg'
 
-  s.add_development_dependency 'rails', '= 4.1.9'
+  s.add_development_dependency 'rails', '= 4.2'
   s.add_development_dependency 'capybara', '~> 2.1'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'database_cleaner'
