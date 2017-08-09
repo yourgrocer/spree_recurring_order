@@ -34,7 +34,7 @@ module Spree
       end
 
       def return_success(item=nil)
-        result = item.nil? ? 'OK' : item
+        result = item.nil? ? 'OK' : item.as_json
         render json: result.to_json, status: 200
       end
 
