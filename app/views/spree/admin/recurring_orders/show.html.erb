@@ -1,13 +1,13 @@
 <% content_for :page_actions do %>
   <% if @recurring_order.active? %>
-    <li><%= button_link_to("Pause", admin_recurring_order_url(number: @recurring_order.number, active: false), {:method => :put, :icon => 'pause'}) %></li>
+    <%= button_link_to("Pause", admin_recurring_order_url(number: @recurring_order.number, active: false), {:method => :put, :icon => 'pause'}) %>
   <% else %>
-    <li><%= button_link_to("Activate", admin_recurring_order_url(number: @recurring_order.number, active: true), {:method => :put, :icon => 'play'}) %></li>
+    <%= button_link_to("Activate", admin_recurring_order_url(number: @recurring_order.number, active: true), {:method => :put, :icon => 'play'}) %>
   <% end %>
   <% if @recurring_order.complete_after_create %>
-    <li><%= button_link_to("Complete on delivery", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: false), {:method => :put, :icon => 'calendar'}) %></li>
+    <%= button_link_to("Complete on delivery", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: false), {:method => :put, :icon => 'calendar'}) %>
   <% else %>
-    <li><%= button_link_to("Complete on creation", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: true), {:method => :put, :icon => 'check'}) %></li>
+    <%= button_link_to("Complete on creation", admin_recurring_order_url(number: @recurring_order.number, complete_after_create: true), {:method => :put, :icon => 'check'}) %>
   <% end %>
 <% end %>
 
@@ -59,9 +59,9 @@
   </fieldset>
   <fieldset class='no-border-bottom'>
     <legend>Recurring List</legend>
-    <table>
+    <table class='table'>
       <thead>
-        <th><%= Spree.t('quantity')%></th> 
+        <th><%= Spree.t('quantity')%></th>
         <th><%= Spree.t('name')%></th>
         <th><%= Spree.t('sku')%></th>
         <th><%= Spree.t('delete')%></th>
@@ -86,9 +86,9 @@
 
 <fieldset class='no-border-bottom'>
   <legend>Orders</legend>
-  <table>
+  <table class='table'>
     <thead>
-      <th><%= Spree.t('number')%></th> 
+      <th><%= Spree.t('number')%></th>
       <th><%= Spree.t('created_date')%></th>
       <th><%= Spree.t('delivery_date')%></th>
       <th><%= Spree.t('state')%></th>
