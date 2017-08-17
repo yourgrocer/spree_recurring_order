@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_recurring_order'
-  s.version     = '3.0.0'
+  s.version     = '3.0.1'
   s.summary     = 'Add the option to create a recurring order'
   s.description = ''
   s.required_ruby_version = '>= 2.0.0'
@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '= 3.0.0'
-  s.add_dependency 'spree_frontend', '= 3.0.0'
-  s.add_dependency 'spree_backend', '= 3.0.0'
-  s.add_dependency 'spree_api', '= 3.0.0'
+  s.add_dependency 'spree_core', '= 3.0.1'
+  s.add_dependency 'spree_frontend', '= 3.0.1'
+  s.add_dependency 'spree_backend', '= 3.0.1'
+  s.add_dependency 'spree_api', '= 3.0.1'
 
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'delayed_job_active_record'
